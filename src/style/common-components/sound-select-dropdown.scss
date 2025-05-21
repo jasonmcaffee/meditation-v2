@@ -1,0 +1,68 @@
+@import "./src/style/common";
+
+.soundSelectDropDown{
+  display: flex;
+  align-self: center;
+  width: 50%;
+}
+.dropDownStyle{
+  display: flex;
+  flex: 1;
+  background-color: rgb(37, 37, 37);
+  border-radius: 10px;
+  width: 70%;
+}
+
+.dropDownChildRow{
+  display: flex;
+  flex-direction: row;
+  align-items: center; //center the play button vertically
+  height: 70px;
+}
+
+.buttonStyle{
+  display: flex;
+  background-color: rgb(62, 62, 62); // $buttonBackgroundColor;
+  width: 100%;
+  border-radius: 10px;
+  padding: 0px;
+  height: 40px;
+  justify-content: center;
+  justify-self: center;
+  justify-items: center;
+  align-self: center;
+  align-items: center;
+  align-content: center;
+
+}
+.buttonTextStyle{
+  display: flex;
+  @extend %font;
+  color: white;
+  word-break: break-word;
+}
+
+
+
+.playButton{
+  //background-color: white;
+  border: none;
+  border-radius: 50px;
+  margin: 10px;
+  //margin-left: 5px;
+  //margin-right: 5px;
+  //margin-top: 5px;
+  //margin-bottom: 5px;
+}
+
+.playButtonIcon{
+  color: black;
+}
+
+.dropDownChildRowText{
+  @extend %font;
+  font-size: 20px;
+  color: white;
+  text-align: left;
+  flex: 1;
+}

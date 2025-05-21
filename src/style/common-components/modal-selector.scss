@@ -1,0 +1,49 @@
+@import "./src/style/common";
+
+//button without modal shown
+.modalSelector{
+  display: flex;
+  //background-color: rgb(62, 62, 62); // $buttonBackgroundColor;
+  background-color: rgba(62, 62, 62, 0.5); // $buttonBackgroundColor;
+  width: 100%;
+  border-radius: 10px;
+  padding: 0px;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalSelectorText{
+  display: flex;
+  @extend %font;
+  color: white;
+  font-size: 18px;
+}
+
+//background of modal
+.modal{
+}
+
+.modalWindow{
+  background-color: rgb(37,37,37);
+}
+
+.optionRowWrapper{
+
+  padding-left: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 5px;
+  margin-bottom: 1px;
+}
+
+.defaultOptionRow{
+
+}
+
+.defaultOptionRowText{
+  display: flex;
+  @extend %font;
+  color: white;
+  font-size: 18px;
+}

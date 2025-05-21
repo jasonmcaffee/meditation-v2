@@ -1,0 +1,61 @@
+@import "./src/style/common";
+
+.finishSessionModal{
+
+}
+
+.row{
+  margin-bottom: 15px;
+  //padding-top: 5px;
+  //padding-bottom: 5px;
+}
+
+.rowOne{
+  @extend .row;
+}
+.rowTwo{
+  @extend .row;
+}
+.rowThree{
+  @extend .row;
+  display: flex;
+  align-self: center;
+}
+.rowFour{
+  @extend .row;
+}
+
+
+
+.font{
+  color: rgb(37, 37, 37);
+  font-size: 20px;
+  @extend %font;
+}
+
+.durationText{
+  @extend .font;
+
+}
+
+.notesText{
+  display: none;
+  @extend .font;
+  font-size: 15px;
+}
+
+.finishSessionModalWindow{
+  //height: auto;
+}
+
+.notesTextInput{
+  @extend %font;
+  //background-color: whitesmoke;
+  background-color: rgb(252, 252, 252);
+  border: 1px rgba(233, 233, 233, 1) solid;
+  border-radius: 5px;
+  //height: 350px;
+  height: 350px;
+  padding: 5px;
+  font-size: 17px;
+}

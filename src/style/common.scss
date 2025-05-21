@@ -1,0 +1,19 @@
+//note: changing these will not affect react native metro reload for some reason.  have to restart the app.
+%font{
+  font-family: Montserrat;
+}
+
+$buttonBackgroundColor: rgb(228, 228, 229 );
+$buttonBorderColor: grey;
+
+$iconButtonColor: rgb(212, 68, 64);
+$iconButtonBackgroundColor: rgb(173, 172, 172);
+$iconButtonBorderColor: rgb(134, 134, 134);
+
+$navigationIconBackgroundColor: rgb(42, 42, 42);
+$navigationIconBackgroundColorActive: rgb(37, 37, 37);
+$navigationIconColor: rgb(209, 209, 210);
+
+$modalBackgroundColor: rgba(0,0,0,.7);
+$modalWindowBackgroundColor: white;
+$modalCloseButtonIconColor: blue;

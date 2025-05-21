@@ -1,0 +1,115 @@
+@import "./src/style/common";
+
+//https://blog.logrocket.com/sass-react-native-guide/
+.timer{
+  display: flex;
+  padding: 5px;
+  position: relative;
+}
+
+.rowOne{
+  display: flex;
+  //flex: 1;
+  height: 60%;
+}
+
+.rowTwo{
+  display: flex;
+  //flex: 1;
+  height: 40%;
+  justify-content: flex-end;
+}
+
+.hoursAndMinutes{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  justify-self: center;
+  justify-items: center;
+  align-self: center;
+  align-items: center;
+  align-content: center;
+  margin-bottom: 20px;
+}
+
+
+.bellIconButton{
+  background-color: transparent;
+  border: none;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+.bellIconButtonIcon{
+  color: white;
+}
+.gearIconButtonIcon{
+  color: white;
+  display: none;
+  visibility: hidden;
+}
+
+.bellIconButtonIconDisabled{
+  @extend .bellIconButtonIcon;
+  color: rgb(102, 102, 102);
+}
+
+.hours{
+  margin-right: 10px;
+}
+
+.timerTime{
+  display: flex;
+  align-items: center; //horizontal align content
+  justify-content: center;//vertical align content
+  align-self: center; //horizontally align self
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 50px;
+  border: 2px solid white;
+}
+
+.timeTextCharContainer{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+}
+
+.timeTextChar{
+  @extend %font;
+  font-size: 55px;
+  color: white;
+  width: 35px;
+  text-align: center;
+}
+
+.timerButtons{
+  display: flex;
+  flex-direction: row;
+  padding: 25px;
+}
+
+.timerButtonsColumn{
+  display: flex;
+  flex: 1;
+}
+
+.timerButton{
+  display: flex;
+  //flex: 1;
+  justify-content: center;//vertical
+  //align-items: center;
+  //align-content: center;
+  align-self: center;
+  height: 100px;
+  width: 100px;
+  //margin: 5px;
+  //padding: 10px;
+  border-radius: 50px;
+}
+
+.timerButtonIcon{
+  color: black;
+}
+

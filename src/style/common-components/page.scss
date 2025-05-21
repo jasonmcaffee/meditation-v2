@@ -1,0 +1,23 @@
+@import "./src/style/common";
+
+.page{
+  position:absolute;
+  z-index: 1;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  background-color: rgb(37, 37, 37);
+}
+
+.pageContent{
+  display: flex;
+  flex: 1;//push bottom navigation to the bottom
+}
+
+.bottomNavigationSpace{
+  height: 70px;
+}
+.bottomNavigation{
+  position: absolute;
+  bottom: 15px;
+}

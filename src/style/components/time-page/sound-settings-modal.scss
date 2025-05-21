@@ -1,0 +1,41 @@
+@import "./src/style/common";
+
+.soundSettingsModal{
+
+}
+
+.row{
+  margin-bottom: 15px;
+  //padding-top: 5px;
+  //padding-bottom: 5px;
+}
+
+.rowOne{
+  @extend .row;
+}
+.rowTwo{
+  @extend .row;
+}
+.rowThree{
+  @extend .row;
+  display: flex;
+  align-self: center;
+}
+.rowFour{
+  @extend .row;
+}
+
+.font{
+  color: rgb(37, 37, 37);
+  font-size: 20px;
+  @extend %font;
+}
+
+.durationText{
+  @extend .font;
+
+}
+
+.soundSettingsModalWindow{
+  //height: auto;
+}

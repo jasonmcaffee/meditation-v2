@@ -1,0 +1,23 @@
+@import "./src/style/common";
+
+.page{
+  display: flex;
+  height: 100%;
+  width: 100%;
+  background-color: rgb(37, 37, 37);
+}
+
+//all content between safe top and bottom navigation.
+.scrollView{
+  width: 100%;
+  padding-right: 10px;
+  padding-left: 10px;
+  //height: 100%;
+  //padding: 10px;
+  //background-color: green;
+  //padding-bottom: 150px; //leave space for bottom navigation
+}
+
+.bottomSpace{
+  height: 50px;
+}

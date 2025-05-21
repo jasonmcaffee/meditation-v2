@@ -1,0 +1,45 @@
+@import "./src/style/common";
+
+.tDropDown{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.buttonStyle{
+  display: flex;
+  //background-color: rgb(62, 62, 62); // $buttonBackgroundColor;
+  background-color: rgba(62, 62, 62, 0.5); // $buttonBackgroundColor;
+  width: 100%;
+  border-radius: 10px;
+  padding: 0px;
+  height: 40px;
+  justify-content: center;
+  justify-self: center;
+  justify-items: center;
+  align-self: center;
+  align-items: center;
+  align-content: center;
+}
+.buttonTextStyle{
+  display: flex;
+  @extend %font;
+  color: white;
+}
+.dropDownStyle{
+  //background-color: $buttonBackgroundColor;
+  background-color: rgb(37, 37, 37);
+  border-radius: 10px;
+}
+
+.dropDownChildRow{
+  display: flex;
+  //background-color: red;
+}
+
+.dropDownChildRowText{
+  @extend %font;
+  font-size: 20px;
+  color: white;
+  text-align: left;
+  flex: 1;
+}

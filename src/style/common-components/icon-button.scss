@@ -1,0 +1,16 @@
+@import "../common";
+
+.iconButton{
+  //background-color: rgb(248, 248, 248);//$iconButtonBackgroundColor;
+  background-color: rgb(228, 228, 229 );//$iconButtonBackgroundColor;
+  width: 40px;
+  padding: 10px;
+  display:flex;
+  align-items: center;
+  border-radius: 7px;
+  border: 1px solid $iconButtonBorderColor;
+}
+
+.icon{
+  color: $iconButtonColor;
+}

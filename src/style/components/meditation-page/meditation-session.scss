@@ -1,0 +1,78 @@
+@import "./src/style/common";
+
+$meditationSessionBackgroundColor:  rgb(67, 67, 67);
+.meditationSession{
+  background-color: $meditationSessionBackgroundColor;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.rowOne{
+  display: flex;
+  flex-direction: row;
+  align-items: center; //vertical align
+}
+.rowTwo{
+  padding-bottom: 5px;
+  padding-top: 5px;
+  display: flex;
+  //align-self: center;
+  margin-left: -6px;
+  //background-color: red;
+}
+.rowThree{
+
+}
+.text{
+  @extend %font;
+  color: white;
+
+}
+
+.date{
+  @extend .text;
+  flex: 2;
+  //
+}
+
+.duration{
+  @extend .text;
+  //
+}
+
+.notes{
+  @extend .text;
+}
+
+.rightSwipeContainer{
+  background-color: transparent;
+  display: flex; //ensures we only slide left by a certain amount.
+  margin-bottom: 10px;
+  border-radius: 5px;
+  //width: 100px;
+}
+
+.animatedTextDeleteButtonContainer{
+  //background-color: $meditationSessionBackgroundColor;
+  display: flex;
+  background-color: transparent;
+  flex: 1;
+}
+
+.deleteButton{
+  display: flex;
+  //margin-left: 10px;
+  background-color: transparent;
+  border: none;
+  flex: 1; //vertically align
+  align-items: flex-end; //push icon to far right
+  justify-content: center; //vertically align delete button
+  width: 70px;
+}
+
+.deleteButtonIcon{
+  display: flex;
+  //background-color: red;
+}
+

@@ -1,0 +1,49 @@
+@import "./src/style/common";
+
+.modal{
+  background-color: $modalBackgroundColor;
+  //background-color: rgba(37, 37, 37, 0.7);
+  //backdrop-filter: blur(50px) brightness(50%);
+  display: flex;
+  //justify-content: center; //vertical
+  align-items: center;
+  position: absolute;
+  padding-top: 30px;
+  height: 100%;
+  width: 100%;
+  z-index: 1000;
+}
+
+
+.modalWindow{
+  //background-color: $modalWindowBackgroundColor;
+  background-color: rgb(247, 245, 248);
+  width: 95%;
+  margin-top: 20px;
+  border-radius: 15px;
+  padding: 10px;
+}
+
+.modalCloseButton{
+  position: absolute;
+  right: 0;
+  background-color: transparent;
+  border: 0px solid transparent;
+  z-index: 100;
+}
+
+.modalCloseButtonIcon{
+  color: rgba(37,37,37,0.8);// $modalCloseButtonIconColor;
+  //background-color: red;
+  position: absolute;
+  top: 3px;
+}
+
+//.blurView{
+//  position: absolute;
+//  left: 0;
+//  top:0;
+//  height: 100%;
+//  width: 100%;
+//  z-index: 11;
+//}

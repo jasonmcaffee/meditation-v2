@@ -1,0 +1,43 @@
+@import "./modal-selector";
+@import "../common";
+
+.trackModalSelector{
+  @extend .modalSelector;
+}
+
+.trackModalSelectorText{
+  @extend .modalSelectorText;
+}
+
+//background of modal
+.trackModal{
+  @extend .modal;
+}
+
+.trackModalWindow{
+  @extend .modalWindow;
+}
+
+.trackOptionRowWrapper{
+  @extend .optionRowWrapper;
+}
+
+.trackDefaultOptionRow{
+  //@extend .defaultOptionRow;
+  border-bottom: 1px solid white;
+  //redundant but needed
+  //border-bottom-color: white;
+  //border-bottom-width: 1px;
+  //margin-bottom: 10px;
+}
+
+.trackLabelText{
+  @extend .defaultOptionRowText;
+  //font-size: 22px;
+  color: $iconButtonColor;
+}
+
+.trackDescriptionText{
+  @extend .defaultOptionRowText;
+  font-size: 15px;
+}
