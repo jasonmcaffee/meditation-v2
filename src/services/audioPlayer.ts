@@ -7,12 +7,14 @@ Sound.setCategory('Playback');
 export type S = Sound;
 
 export function createSound(fileName: string): Promise<S>{
+    console.log(`Attempting to load sound file: ${fileName}`);
     return new Promise<S>((resolve, reject)=>{
        let s = new Sound(fileName, Sound.MAIN_BUNDLE, (error: any) =>{
            if(error){
-               console.log(`error in creating react native sound`, error);
+               console.log(`Error loading sound file ${fileName}:`, error);
                return reject(error);
            }
+           console.log(`Successfully loaded sound file: ${fileName}`);
            resolve(s);
        });
     });

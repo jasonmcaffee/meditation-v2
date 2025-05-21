@@ -12,6 +12,20 @@
 		4E47D0E849B543743E2EAFA9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		B924708E2DDE9F020075FF74 /* strong_stream.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B924708C2DDE9F020075FF74 /* strong_stream.mp3 */; };
+		B924708F2DDE9F020075FF74 /* chime_gentle_paced.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B92470812DDE9F020075FF74 /* chime_gentle_paced.mp3 */; };
+		B92470902DDE9F020075FF74 /* metal_bowl_strike_hard2_gong.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B92470872DDE9F020075FF74 /* metal_bowl_strike_hard2_gong.mp3 */; };
+		B92470912DDE9F020075FF74 /* metal_bowl_sing_quiet.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B92470862DDE9F020075FF74 /* metal_bowl_sing_quiet.mp3 */; };
+		B92470922DDE9F020075FF74 /* metal_bowl_strike_medium18_vibrato.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B92470892DDE9F020075FF74 /* metal_bowl_strike_medium18_vibrato.mp3 */; };
+		B92470932DDE9F020075FF74 /* chime.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B92470802DDE9F020075FF74 /* chime.mp3 */; };
+		B92470942DDE9F020075FF74 /* metal_bowl_strike_soft6.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B924708A2DDE9F020075FF74 /* metal_bowl_strike_soft6.mp3 */; };
+		B92470952DDE9F020075FF74 /* medium_stream.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B92470842DDE9F020075FF74 /* medium_stream.mp3 */; };
+		B92470962DDE9F020075FF74 /* chime_medium_paced.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B92470822DDE9F020075FF74 /* chime_medium_paced.mp3 */; };
+		B92470972DDE9F020075FF74 /* metal_bowl_sing_good_long_wooden.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B92470852DDE9F020075FF74 /* metal_bowl_sing_good_long_wooden.mp3 */; };
+		B92470982DDE9F020075FF74 /* chime_medium_single.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B92470832DDE9F020075FF74 /* chime_medium_single.mp3 */; };
+		B92470992DDE9F020075FF74 /* soft_stream.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B924708B2DDE9F020075FF74 /* soft_stream.mp3 */; };
+		B924709A2DDE9F020075FF74 /* metal_bowl_strike_medium7_deep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = B92470882DDE9F020075FF74 /* metal_bowl_strike_medium7_deep.mp3 */; };
+		B924709C2DDE9F900075FF74 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B924709B2DDE9F900075FF74 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +38,20 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-meditation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-meditation.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = meditation/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = meditation/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		B92470802DDE9F020075FF74 /* chime.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = chime.mp3; sourceTree = "<group>"; };
+		B92470812DDE9F020075FF74 /* chime_gentle_paced.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = chime_gentle_paced.mp3; sourceTree = "<group>"; };
+		B92470822DDE9F020075FF74 /* chime_medium_paced.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = chime_medium_paced.mp3; sourceTree = "<group>"; };
+		B92470832DDE9F020075FF74 /* chime_medium_single.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = chime_medium_single.mp3; sourceTree = "<group>"; };
+		B92470842DDE9F020075FF74 /* medium_stream.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = medium_stream.mp3; sourceTree = "<group>"; };
+		B92470852DDE9F020075FF74 /* metal_bowl_sing_good_long_wooden.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = metal_bowl_sing_good_long_wooden.mp3; sourceTree = "<group>"; };
+		B92470862DDE9F020075FF74 /* metal_bowl_sing_quiet.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = metal_bowl_sing_quiet.mp3; sourceTree = "<group>"; };
+		B92470872DDE9F020075FF74 /* metal_bowl_strike_hard2_gong.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = metal_bowl_strike_hard2_gong.mp3; sourceTree = "<group>"; };
+		B92470882DDE9F020075FF74 /* metal_bowl_strike_medium7_deep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = metal_bowl_strike_medium7_deep.mp3; sourceTree = "<group>"; };
+		B92470892DDE9F020075FF74 /* metal_bowl_strike_medium18_vibrato.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = metal_bowl_strike_medium18_vibrato.mp3; sourceTree = "<group>"; };
+		B924708A2DDE9F020075FF74 /* metal_bowl_strike_soft6.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = metal_bowl_strike_soft6.mp3; sourceTree = "<group>"; };
+		B924708B2DDE9F020075FF74 /* soft_stream.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = soft_stream.mp3; sourceTree = "<group>"; };
+		B924708C2DDE9F020075FF74 /* strong_stream.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = strong_stream.mp3; sourceTree = "<group>"; };
+		B924709B2DDE9F900075FF74 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -70,6 +98,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				B924709B2DDE9F900075FF74 /* Assets.xcassets */,
+				B924708D2DDE9F020075FF74 /* sounds */,
 				13B07FAE1A68108700A75B9A /* meditation */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
@@ -87,6 +117,26 @@
 				13B07F961A680F5B00A75B9A /* meditation.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B924708D2DDE9F020075FF74 /* sounds */ = {
+			isa = PBXGroup;
+			children = (
+				B92470802DDE9F020075FF74 /* chime.mp3 */,
+				B92470812DDE9F020075FF74 /* chime_gentle_paced.mp3 */,
+				B92470822DDE9F020075FF74 /* chime_medium_paced.mp3 */,
+				B92470832DDE9F020075FF74 /* chime_medium_single.mp3 */,
+				B92470842DDE9F020075FF74 /* medium_stream.mp3 */,
+				B92470852DDE9F020075FF74 /* metal_bowl_sing_good_long_wooden.mp3 */,
+				B92470862DDE9F020075FF74 /* metal_bowl_sing_quiet.mp3 */,
+				B92470872DDE9F020075FF74 /* metal_bowl_strike_hard2_gong.mp3 */,
+				B92470882DDE9F020075FF74 /* metal_bowl_strike_medium7_deep.mp3 */,
+				B92470892DDE9F020075FF74 /* metal_bowl_strike_medium18_vibrato.mp3 */,
+				B924708A2DDE9F020075FF74 /* metal_bowl_strike_soft6.mp3 */,
+				B924708B2DDE9F020075FF74 /* soft_stream.mp3 */,
+				B924708C2DDE9F020075FF74 /* strong_stream.mp3 */,
+			);
+			path = sounds;
 			sourceTree = "<group>";
 		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
@@ -161,6 +211,20 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				4E47D0E849B543743E2EAFA9 /* PrivacyInfo.xcprivacy in Resources */,
+				B924708E2DDE9F020075FF74 /* strong_stream.mp3 in Resources */,
+				B924708F2DDE9F020075FF74 /* chime_gentle_paced.mp3 in Resources */,
+				B92470902DDE9F020075FF74 /* metal_bowl_strike_hard2_gong.mp3 in Resources */,
+				B924709C2DDE9F900075FF74 /* Assets.xcassets in Resources */,
+				B92470912DDE9F020075FF74 /* metal_bowl_sing_quiet.mp3 in Resources */,
+				B92470922DDE9F020075FF74 /* metal_bowl_strike_medium18_vibrato.mp3 in Resources */,
+				B92470932DDE9F020075FF74 /* chime.mp3 in Resources */,
+				B92470942DDE9F020075FF74 /* metal_bowl_strike_soft6.mp3 in Resources */,
+				B92470952DDE9F020075FF74 /* medium_stream.mp3 in Resources */,
+				B92470962DDE9F020075FF74 /* chime_medium_paced.mp3 in Resources */,
+				B92470972DDE9F020075FF74 /* metal_bowl_sing_good_long_wooden.mp3 in Resources */,
+				B92470982DDE9F020075FF74 /* chime_medium_single.mp3 in Resources */,
+				B92470992DDE9F020075FF74 /* soft_stream.mp3 in Resources */,
+				B924709A2DDE9F020075FF74 /* metal_bowl_strike_medium7_deep.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

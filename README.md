@@ -114,14 +114,4 @@ Add sound files to iOS/Android.
 - On Android, put sound files in {project_root}/android/app/src/main/res/raw/. Just create the folder if it doesn't exist.
 - Quit Metro and run `npm run ios` again or you will get errors.
 
-### React Native Track Player
-This lib is setup, but not used.  It only can play one track at a time, but it has lock screen display and some other nice functionality that may come in handy later.
-
-Add sound files to ./assets then require('./assets/chime.mp3') and use that as the url.
-
-```javascript
-const chimeTrack = {
-    url: require('../../assets/chime.mp3'), // Load media from the file system.  No spaces allowed!
-}
-```
 
