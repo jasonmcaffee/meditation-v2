@@ -2,7 +2,6 @@ import React, {useEffect} from 'react';
 import {StyleSheetProperties,  Text, useWindowDimensions} from 'react-native';
 import Div from "../../common-components/Div";
 import Button from "../../common-components/Button";
-// @ts-ignore
 import * as styles from '../../style/components/time-page/time-page.scss';
 import Page from "../../common-components/Page";
 import IconButton from "../../common-components/IconButton";
