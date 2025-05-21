@@ -1,97 +1,127 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+## Jhana Meditation App
+This is the open source repository for the Jhana Meditation app.
 
-# Getting Started
+This app provides several features to assist your meditation practice, including:
+- Meditation timer
+- Session rating and notes so you can track your progress
+- All data is stored locally on your device.
+- Completely free of cost and ad free.
+- Soon to have audio tracks, including guided meditations.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+[App Store Link](https://apps.apple.com/us/app/jhana-meditation/id6444243938)
 
-## Step 1: Start Metro
+## Code Conventions
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+### Component Styling
+Most styling is done via [react-native-sass-transformer](https://github.com/kristerkari/react-native-sass-transformer), which allows us to do styling in a similar way to web, and also allows us to separate our style related code from the component.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### Eventing
+A [custom event bus](https://github.com/jasonmcaffee/meditation/blob/master/src/services/EventBus.ts) is used for event driven development.
 
-```sh
-# Using npm
-npm start
+The event bus creates a strongly typed proxy that intercepts property access and recursively lazy loads eventing functionality on the object and it's children.
 
-# OR using Yarn
-yarn start
+This is useful for reactively updating the ui when state changes.
+
+```javascript
+const appEventBus = createObserverProxy({someProperty: string});
+//subscribe to someProperty events
+appEventBus.someProperty().on((value: string) => console.log('someProperty changed: ${value}'));
+//trigger event
+appEventBus.someProperty().set('hello');
 ```
 
-## Step 2: Build and run your app
+### Page State
+Often a component or page can have several pieces of state that can be tedious to setup the boiler plate for.
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+To help reduce the tediousness, a [custom proxy wrapper](https://github.com/jasonmcaffee/meditation/blob/master/src/react-utils/proxyUseState.ts) is used to setup useState for each property on an object.
 
-### Android
+Set on the proxied object is intercepted so that the underlying setX of useState is fired.
 
-```sh
-# Using npm
-npm run android
+```javascript
+const componentData = {
+    countOne: 0,
+    countTwo: 0
+};
 
-# OR using Yarn
-yarn android
+function MyComponent(){
+    //normally we'd need to create 4 variables: countOne, setCountOne, countTwo, setCountTwo, but with pageState, we can simply do:
+    const state = pageState(componentData);
+    return <Div>
+        <Div onClick={()=> state.countOne += 1}><Text>Increment Count 1</Text></Div>
+        <Div onClick={()=> state.countTwo += 1}><Text>Increment Count 2</Text></Div>
+        <Text>Count one: {state.countOne}</Text>
+        <Text>Count two: {state.countTwo}</Text>
+    </Div>;
+}
 ```
 
-### iOS
+## Setup
+This app is written in React Native, with Typescript and SASS.
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+### ruby
+This project requires ruby 2.7.5, which requires openssl 1.1
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+```shell
+rbenv install 2.7.5
+```
 
-```sh
+### ios
+#### Install Xcode and command line tools
+#### Install cocoapods
+```shell
+gem install securerandom -v 0.3.2
+gem install activesupport -v 7.1.5.1
+gem install cocoapods
+```
+
+If you run into issues with pod not being found, run bundle install from the root of the project
+```shell
 bundle install
 ```
 
-Then, and every time you update your native dependencies, run:
+Boost verification bug
 
-```sh
-bundle exec pod install
+node_modules/react-native/third-party-podspecs/boost.podspec
+```
+ spec.source = { :http => 'https://archives.boost.io/release/1.76.0/source/boost_1_76_0.tar.bz2',
+                  :sha256 => 'f0397ba6e982c4450f27bf32a2a83292aba035b827a5623a14636ea583318c41' }
+```
+#### Install pods
+```shell
+cd ios && pod install && cd ..
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+#### Install Assets
+For fonts
+```shell
+npx react-native-assets
+```
+### React Native
 
-```sh
-# Using npm
+## Running
+### Development on simulator
+```shell
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+## Sound Files
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+### React Native Sound
+For playing multiple sounds at once, React-Native-Sound is used.
 
-## Step 3: Modify your app
+Add sound files to iOS/Android.
+- On iOS, drag and drop sound file into project in Xcode. Remember to check "Copy items if needed" option and "Add to targets".
+- On Android, put sound files in {project_root}/android/app/src/main/res/raw/. Just create the folder if it doesn't exist.
+- Quit Metro and run `npm run ios` again or you will get errors.
 
-Now that you have successfully run the app, let's make changes!
+### React Native Track Player
+This lib is setup, but not used.  It only can play one track at a time, but it has lock screen display and some other nice functionality that may come in handy later.
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+Add sound files to ./assets then require('./assets/chime.mp3') and use that as the url.
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+```javascript
+const chimeTrack = {
+    url: require('../../assets/chime.mp3'), // Load media from the file system.  No spaces allowed!
+}
+```
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
