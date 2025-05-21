@@ -16,9 +16,6 @@ import DropDown from "../../common-components/DropDown";
 import SoundSettingsModal from "./SoundSettingsModal";
 import appEventBus from "../../services/appEventBus";
 import createUnregisterFunction from "../../react-utils/createUnregisterFunction";
-import SoundSelectDropDown from "../../common-components/SoundSelectDropDown";
-import TDropDown from "../../common-components/TDropDown";
-import ModalSelector from "../../common-components/ModalSelector";
 import TrackModalSelector from "../../common-components/TrackModalSelector";
 
 function TimePage(){
