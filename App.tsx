@@ -2,6 +2,7 @@ import React, {ReactNode, useEffect, useState} from 'react';
 import TimePage from "./src/components/time-page/TimePage";
 import MeditationSessionsPage from "./src/components/meditation-sessions-page/MeditationSessionsPage";
 import "react-native-gesture-handler";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import './src/services/audioNotifications';
 import "./src/services/appEventBus";
 import "./src/services/hapticFeedback";
@@ -22,11 +23,13 @@ const App = () => {
   }, []);
 
   return (
-    <React.Fragment>
-      {timePage}
-      {meditationSessionPage}
-      {modal}
-    </React.Fragment>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <React.Fragment>
+        {timePage}
+        {meditationSessionPage}
+        {modal}
+      </React.Fragment>
+    </GestureHandlerRootView>
   );
 };
 export default App;
