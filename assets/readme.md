@@ -1,0 +1,1 @@
+This is only as a duplicate copy.  See the main readme for how to add files/resources to ios and android.
