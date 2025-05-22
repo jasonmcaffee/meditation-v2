@@ -134,3 +134,5 @@ sound.js to use default
 ``` 
 var resolveAssetSource = require("react-native/Libraries/Image/resolveAssetSource").default;
 ```
+
+The patch is in patches folder, and is applied post-install via scripts in package.json
