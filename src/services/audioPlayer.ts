@@ -1,22 +1,30 @@
-import {soundOptions} from "../config/soundFiles";
-
+const resolveAssetSource = require("react-native/Libraries/Image/resolveAssetSource");
 const Sound = require('react-native-sound');
 // Enable playback in silence mode
-Sound.setCategory('Playback');
+Sound.setCategory('Playback', true);
 //@ts-ignore use an alias due to TS having issue with value being same name as type Sound
 export type S = Sound;
 
+
 export function createSound(fileName: string): Promise<S>{
     console.log(`Attempting to load sound file: ${fileName}`);
+    console.log(Sound.MAIN_BUNDLE);
+
     return new Promise<S>((resolve, reject)=>{
-       let s = new Sound(fileName, Sound.MAIN_BUNDLE, (error: any) =>{
-           if(error){
-               console.log(`Error loading sound file ${fileName}:`, error);
-               return reject(error);
-           }
-           console.log(`Successfully loaded sound file: ${fileName}`);
-           resolve(s);
-       });
+        try{
+            console.log(`Sound type is: `, Sound);
+            console.log(`resolve asset is: `, resolveAssetSource);
+            let s = new Sound(fileName, Sound.MAIN_BUNDLE, (error: any) =>{
+                if(error){
+                    console.log(`Error loading sound file ${fileName}:`, error);
+                    return reject(error);
+                }
+                console.log(`Successfully loaded sound file: ${fileName}`);
+                resolve(s);
+            });
+        }catch (e){
+            console.error('Error creating sound: ', e);
+        }
     });
 }
 
@@ -56,10 +64,13 @@ class AudioPlayer{
 async function playSound(sound: S){
     // return sound.play(); <-- not a promise.
     return new Promise<S>((resolve, reject) => {
+        console.log(`calling sound.play`);
         sound.play((success: boolean)=>{
             if(success){
+                console.log(`successfully playing sound.`);
                 resolve(sound);
             }else{
+                console.error('cant play sound!');
                 reject();
             }
         })

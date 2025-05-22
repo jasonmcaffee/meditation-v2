@@ -101,7 +101,20 @@ npx react-native-assets
 ## Running
 ### Development on simulator
 ```shell
+npm start -- --reset-cache
 npm run ios
+```
+
+### Specify device
+```shell
+xcrun simctl list devices
+npm run ios -- --simulator="iPhone 16 pro"
+```
+
+### Misc cleanup
+```shell
+watchman watch-del-all
+
 ```
 
 ## Sound Files
@@ -111,7 +124,13 @@ For playing multiple sounds at once, React-Native-Sound is used.
 
 Add sound files to iOS/Android.
 - On iOS, drag and drop sound file into project in Xcode. Remember to check "Copy items if needed" option and "Add to targets".
+-- Create groups
 - On Android, put sound files in {project_root}/android/app/src/main/res/raw/. Just create the folder if it doesn't exist.
 - Quit Metro and run `npm run ios` again or you will get errors.
 
-
+#### Issue
+With the upgrade to react native 0.79.2, the import broke in the Sound class, so we have to patch it ourselves by changing
+sound.js to use default 
+``` 
+var resolveAssetSource = require("react-native/Libraries/Image/resolveAssetSource").default;
+```

@@ -8,7 +8,9 @@ import "./src/services/appEventBus";
 import "./src/services/hapticFeedback";
 import appEventBus from "./src/services/appEventBus";
 // import  './src/style/common.scss'; //fix? https://github.com/kristerkari/react-native-sass-transformer/issues/9
-
+import Sound from 'react-native-sound';
+console.log(Sound.MAIN_BUNDLE); // Should print 'NSBundle mainBundle'
+Sound.setCategory('Playback');
 //have a single instance to prevent flash
 const timePage = <TimePage/>;
 const meditationSessionPage = <MeditationSessionsPage/>;
