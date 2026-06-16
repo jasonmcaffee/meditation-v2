@@ -13,17 +13,18 @@ type Props = PropsWithChildren<{
     iconClassName?: StyleProp<ViewStyle>,
     onClick?: ()=> void,
     icon?: IconDefinition,
-    size?: number
+    size?: number,
+    testID?: string,
 }>;
 
-function Button({children, className = null, iconClassName = null, onClick, icon=faOm, size=20}: Props){
+function Button({children, className = null, iconClassName = null, onClick, icon=faOm, size=20, testID}: Props){
     const style = [styles.iconButton, className];
     const iconStyle = [styles.icon, iconClassName];
     function hapticOnClick(){
         appEventBus.hapticFeedback.heavy().set(true);
         onClick && onClick();
     }
-    return <Div className={style} onClick={hapticOnClick}>
+    return <Div className={style} onClick={hapticOnClick} testID={testID}>
         {children}
         <FontAwesomeIcon style={iconStyle} icon={icon} size={size}/>
     </Div>;

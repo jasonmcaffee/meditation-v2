@@ -1,0 +1,49 @@
+appId: com.jasonmcaffee.meditation
+---
+# E2E test: start the timer, let it run, finish, save, verify on Sessions page.
+
+- launchApp:
+    clearState: true
+
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "start-pause-button"
+    timeout: 25000
+
+- tapOn:
+    id: "start-pause-button"
+
+- waitForAnimationToEnd
+
+- tapOn:
+    id: "finish-button"
+
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "notes-input"
+    timeout: 5000
+
+- tapOn:
+    id: "notes-input"
+- inputText: "Timer test meditation"
+
+- tapOn:
+    id: "save-button"
+
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    notVisible:
+      id: "notes-input"
+    timeout: 5000
+
+- tapOn:
+    id: "sessions-tab"
+
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      text: "Timer test meditation"
+    timeout: 5000
+- assertVisible: "Timer test meditation"

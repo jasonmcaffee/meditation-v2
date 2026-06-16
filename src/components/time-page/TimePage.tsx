@@ -60,10 +60,10 @@ function TimePage(){
                     {/*<TDropDown currentOption={state.selectedScheduledTrackOption} options={timePage.scheduledTrackOptions} onSelected={o => state.selectedScheduledTrackOption = o }/>*/}
                     <Div className={styles.timerButtons}>
                         <Div className={styles.timerButtonsColumn}>
-                            <IconButton icon={state.isStopWatchRunning ? faPause : faPlay} className={styles.timerButton} iconClassName={styles.timerButtonIcon} onClick={() => timePage.startPauseStopwatch()}/>
+                            <IconButton testID="start-pause-button" icon={state.isStopWatchRunning ? faPause : faPlay} className={styles.timerButton} iconClassName={styles.timerButtonIcon} onClick={() => timePage.startPauseStopwatch()}/>
                         </Div>
                         <Div className={styles.timerButtonsColumn}>
-                            <Button text={"Finish"} className={styles.timerButton} onClick={()=> timePage.finishSession()}/>
+                            <Button testID="finish-button" text={"Finish"} className={styles.timerButton} onClick={()=> timePage.finishSession()}/>
                         </Div>
                     </Div>
                 </Div>

@@ -1,0 +1,54 @@
+appId: com.jasonmcaffee.meditation
+---
+# E2E test: finish a session (0 duration), type a note, save, verify on Sessions page.
+# Requires: emulator running + Metro bundler running (npm run start)
+
+- launchApp:
+    clearState: true
+
+# ── Wait for app to load JS bundle from Metro ─────────────────────────────────
+- waitForAnimationToEnd
+
+- extendedWaitUntil:
+    visible:
+      id: "finish-button"
+    timeout: 25000
+
+# ── Step 1: Open the Finish Session modal ─────────────────────────────────────
+- tapOn:
+    id: "finish-button"
+
+# ── Step 2: Wait for modal ────────────────────────────────────────────────────
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "notes-input"
+    timeout: 5000
+
+# ── Step 3: Type the session note ─────────────────────────────────────────────
+- tapOn:
+    id: "notes-input"
+- inputText: "Maestro E2E test note"
+
+# ── Step 4: Tap Save ──────────────────────────────────────────────────────────
+- tapOn:
+    id: "save-button"
+
+# ── Step 5: Verify the modal closed ───────────────────────────────────────────
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    notVisible:
+      id: "notes-input"
+    timeout: 5000
+
+# ── Step 6: Navigate to the Sessions tab ─────────────────────────────────────
+- tapOn:
+    id: "sessions-tab"
+
+# ── Step 7: Confirm the saved session note appears ───────────────────────────
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      text: "Maestro E2E test note"
+    timeout: 5000
+- assertVisible: "Maestro E2E test note"

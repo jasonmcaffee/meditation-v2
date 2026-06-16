@@ -22,7 +22,7 @@ function Modal({children, className = null, windowClassName = null, onCloseClick
 
     const closeButton = showCloseButton ? <IconButton icon={faClose} onClick={onCloseClick} className={styles.modalCloseButton} iconClassName={styles.modalCloseButtonIcon} size={35}/> : null;
     return <Div className={style} onClick={onCloseClick} >
-        <Div className={[styles.modalWindow, windowClassName]}>
+        <Div className={[styles.modalWindow, windowClassName]} onClick={() => {}}>
             {closeButton}
             {children}
         </Div>

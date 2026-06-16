@@ -61,10 +61,12 @@ export class MeditationSessionRepository {
 async function ensureSessionsFileExists(func: ()=> Promise<string> ){
     try{
         return await func();
-    }catch(e){
-        //@ts-ignore
-        if(e.message.indexOf('no such file or directory') >= 0){
-            console.log(`file doesn't exist.`)
+    }catch(e: any){
+        // Check for ENOENT by code (Android RNFS) or case-insensitive message (iOS/other)
+        const isNotFound = e.code === 'ENOENT' ||
+            (e.message && e.message.toLowerCase().indexOf('no such file or directory') >= 0);
+        if(isNotFound){
+            console.log(`sessions file doesn't exist, creating it.`)
             const dataContainer: IDataContainer = {
                 meditationSessions: [],
             }

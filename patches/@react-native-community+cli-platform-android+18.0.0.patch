@@ -1,0 +1,26 @@
+diff --git a/node_modules/@react-native-community/cli-platform-android/build/commands/buildAndroid/index.js b/node_modules/@react-native-community/cli-platform-android/build/commands/buildAndroid/index.js
+index 512f3f1..0011037 100644
+--- a/node_modules/@react-native-community/cli-platform-android/build/commands/buildAndroid/index.js
++++ b/node_modules/@react-native-community/cli-platform-android/build/commands/buildAndroid/index.js
+@@ -67,7 +67,7 @@ async function buildAndroid(_argv, config, args) {
+ }
+ function build(gradleArgs, sourceDir) {
+   process.chdir(sourceDir);
+-  const cmd = process.platform.startsWith('win') ? 'gradlew.bat' : './gradlew';
++  const cmd = process.platform.startsWith('win') ? require('path').join(sourceDir, 'gradlew.bat') : './gradlew';
+   _cliTools().logger.info('Building the app...');
+   _cliTools().logger.debug(`Running command "${cmd} ${gradleArgs.join(' ')}"`);
+   try {
+diff --git a/node_modules/@react-native-community/cli-platform-android/build/commands/runAndroid/index.js b/node_modules/@react-native-community/cli-platform-android/build/commands/runAndroid/index.js
+index 0317c51..0b09649 100644
+--- a/node_modules/@react-native-community/cli-platform-android/build/commands/runAndroid/index.js
++++ b/node_modules/@react-native-community/cli-platform-android/build/commands/runAndroid/index.js
+@@ -144,7 +144,7 @@ async function buildAndRun(args, androidProject) {
+     args.device = args.deviceId;
+   }
+   process.chdir(androidProject.sourceDir);
+-  const cmd = process.platform.startsWith('win') ? 'gradlew.bat' : './gradlew';
++  const cmd = process.platform.startsWith('win') ? require('path').join(androidProject.sourceDir, 'gradlew.bat') : './gradlew';
+   const adbPath = (0, _getAdbPath.default)();
+   let selectedTask;
+   if (args.interactive) {

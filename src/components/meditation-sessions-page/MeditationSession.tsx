@@ -22,7 +22,7 @@ function MeditationSession({children, onDeleteClick, meditationSession}: Props){
     const emptyColor = "rgb(174, 174, 174 )";
 
     return <Swipeable renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, ()=>{onDeleteClick(meditationSession)})}>
-        <Div key={meditationSession.id} className={styles.meditationSession}>
+        <Div key={meditationSession.id} testID={`session-item-${meditationSession.id}`} className={styles.meditationSession}>
             <Div className={styles.rowOne}>
                 <Text style={styles.date}>{getFormattedDate(meditationSession.dateMs)}</Text>
                 <Text style={styles.duration}>{ getFormattedDuration(meditationSession.durationMs)}</Text>

@@ -53,12 +53,19 @@ class TimePage{
     }
 
     async saveSession(notes: string, rating: number){
-        if(!this.pageState!.meditationSession) { return console.warn('no meditation session was set to save'); }
-        this.pageState!.meditationSession.notes = notes;
-        this.pageState!.meditationSession.rating = rating;
-
-        await meditationSessionRepository.saveMeditationSession(this.pageState!.meditationSession);
-        this.pageState!.meditationSession = undefined;
+        try {
+            const session = this.pageState!.meditationSession;
+            if(!session) { return console.warn('[timePage] saveSession: no meditationSession set'); }
+            console.log('[timePage] saveSession called', { notes, rating, sessionId: session.id });
+            session.notes = notes;
+            session.rating = rating;
+            await meditationSessionRepository.saveMeditationSession(session);
+            console.log('[timePage] saveSession complete');
+            this.pageState!.meditationSession = undefined;
+            this.pageState!.shouldDisplayFinishSessionModal = false;
+        } catch(e) {
+            console.error('[timePage] saveSession error:', e);
+        }
     }
 
     useIsAlarmEnabled(){

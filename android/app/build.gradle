@@ -79,11 +79,13 @@ android {
 
     namespace "com.meditation"
     defaultConfig {
-        applicationId "com.meditation"
+        applicationId "com.jasonmcaffee.meditation"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        missingDimensionStrategy "detox", "full"
     }
     signingConfigs {
         debug {
@@ -92,15 +94,19 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file(RELEASE_STORE_FILE)
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+        }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
@@ -115,5 +121,17 @@ dependencies {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
+    }
+
+    androidTestImplementation project(':detox')
+    androidTestImplementation 'junit:junit:4.12'
+}
+
+configurations.androidTestImplementation {
+    resolutionStrategy {
+        force 'androidx.test:monitor:1.6.1'
+        force 'androidx.test:runner:1.5.2'
+        force 'androidx.test.ext:junit:1.1.5'
+        force 'junit:junit:4.12'
     }
 }

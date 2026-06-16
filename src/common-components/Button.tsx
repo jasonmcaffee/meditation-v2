@@ -9,17 +9,18 @@ type Props = PropsWithChildren<{
     className?: StyleProp<ViewStyle>,
     onClick?: ()=> void,
     text?: string,
-    style2?: boolean
+    style2?: boolean,
+    testID?: string,
 }>;
 
-function Button({children, className = null, onClick, text, style2}: Props){
+function Button({children, className = null, onClick, text, style2, testID}: Props){
     const style = [ style2 ? styles.buttonStyle2 : styles.button, className];
     const textEl = text == null ? null : <Text style={styles.buttonText}>{text}</Text>
     function hapticOnClick(){
         appEventBus.hapticFeedback.heavy().set(true);
         onClick && onClick();
     }
-    return <Div className={style} onClick={hapticOnClick}>{textEl}{children}</Div>;
+    return <Div className={style} onClick={hapticOnClick} testID={testID}>{textEl}{children}</Div>;
 }
 
 export default Button;
