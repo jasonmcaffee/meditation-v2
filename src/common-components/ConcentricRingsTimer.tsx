@@ -47,7 +47,7 @@ const BLOBS: BlobDef[] = [
 ];
 
 const DESIGN_SIZE = 360;
-const BASE_R      = 125;   // ring radius in design units (R in new-design.html)
+const BASE_R      = 160;   // dot orbit radius in design units — sized so the full HH:MM:SS fits inside
 const CORE_R      = 92;
 const STEPS       = 80;    // higher segment count → smoother blob contour
 const BUCKETS     = 8;     // alpha buckets for additive particle render
@@ -178,7 +178,6 @@ function ConcentricRingsTimer({durationData, canvasWidth, canvasHeight, isRunnin
     const top   = 55 * scale;
     const cy    = top + (canvasHeight - top - 130 * scale) * 0.44;
     const coreR = CORE_R * scale;
-    const ringR = BASE_R * scale;
     const fontSize  = Math.round(52 * scale);
     const charW     = Math.round(36 * scale);
     const blobBlur  = 5 * scale;   // glow halo around the crisp ribbon core (design shadowBlur=7)
@@ -220,9 +219,6 @@ function ConcentricRingsTimer({durationData, canvasWidth, canvasHeight, isRunnin
                         positions={[0, 0.5, 1]}
                     />
                 </Circle>
-
-                {/* Faint base ring */}
-                <Circle cx={cx} cy={cy} r={ringR} color="rgba(255,255,255,0.10)" style="stroke" strokeWidth={1}/>
 
                 {/* ── Comet trail: hundreds of tiny additive dots, bucketed by opacity ── */}
                 {bucketPaths.map((bp, i) => (
