@@ -4,8 +4,12 @@
 
 }
 
+// Fill (nearly) the whole screen height so the notes area can be large.
 .finishSessionModalWindow{
-
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
 }
 
 .row{
@@ -18,8 +22,11 @@
   display: flex;
 }
 
+// Notes row grows to absorb the modal's free vertical space.
 .rowTwo{
   @extend .row;
+  flex: 1;
+  display: flex;
 }
 
 .rowThree{
@@ -38,13 +45,15 @@
   font-size: 20px;
 }
 
+// Matches the home-screen timer treatment: thin Montserrat, light colour, tracked.
 .durationText{
-  @extend .font;
+  @extend %font;
   font-size: 32px;
-  color: $accentCyan;
-  font-weight: 700;
+  font-weight: 200;
+  letter-spacing: 2px;
+  color: #f3f4f7;
   text-align: center;
-  flex: 1;
+  align-self: center;
 }
 
 .notesText{
@@ -57,13 +66,14 @@
 
 .notesTextInput{
   @extend %font;
+  flex: 1;
   background-color: rgba(255, 255, 255, 0.06);
   border-width: 1px;
   border-color: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  height: 200px;
-  padding: 12px;
+  padding: 14px;
   font-size: 16px;
+  line-height: 22px;
   color: #ffffff;
   textAlignVertical: top;
 }

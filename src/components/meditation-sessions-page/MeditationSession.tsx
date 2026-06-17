@@ -8,6 +8,7 @@ import IMeditationSession, {getFormattedDate, getFormattedDuration} from "../../
 import {Animated, Text} from "react-native";
 import {RectButton, Swipeable} from "react-native-gesture-handler";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import GradientStar from "../../common-components/GradientStar";
 import AnimatedInterpolation = Animated.AnimatedInterpolation;
 
 type Props = PropsWithChildren<{
@@ -28,9 +29,8 @@ function MeditationSession({children, onDeleteClick, meditationSession}: Props){
             <Div className={styles.rowTwo}>
                 <StarRating
                     rating={meditationSession.rating}
-                    color="#d64c8c"
-                    emptyColor="rgba(255,255,255,0.15)"
                     starSize={18}
+                    StarIconComponent={GradientStar}
                     onChange={() => null}
                     animationConfig={{scale: 1}}
                 />

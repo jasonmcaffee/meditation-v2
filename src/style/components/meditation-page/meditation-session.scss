@@ -40,9 +40,10 @@
 
 .duration{
   @extend .text;
-  color: $accentCyan;
+  color: rgba(255, 255, 255, 0.88);
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 300;
+  letter-spacing: 1px;
 }
 
 .notes{

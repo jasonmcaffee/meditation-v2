@@ -7,7 +7,8 @@ import Modal from "../../common-components/Modal";
 import IMeditationSession, {getFormattedDuration} from "../../models/IMeditationSession";
 //@ts-ignore
 import StarRating from 'react-native-star-rating-widget';
-import Button from "../../common-components/Button";
+import GradientButton from "../../common-components/GradientButton";
+import GradientStar from "../../common-components/GradientStar";
 
 type Props = PropsWithChildren<{
     onCloseClick?: ()=> void,
@@ -53,14 +54,13 @@ function FinishSessionModal({meditationSession, children, onCloseClick, onSaveCl
             <StarRating
                 rating={rating}
                 onChange={setRating}
-                color={"#d64c8c"}
-                emptyColor={"rgba(255,255,255,0.2)"}
-                starSize={45}
+                starSize={46}
+                StarIconComponent={GradientStar}
                 animationConfig={{scale: 1}}
             />
         </Div>
         <Div className={styles.rowFour}>
-            <Button testID="save-button" onClick={handleSave} text={"Save"} style2={true}/>
+            <GradientButton testID="save-button" onClick={handleSave} text={"Save"}/>
         </Div>
     </Modal>
 }
