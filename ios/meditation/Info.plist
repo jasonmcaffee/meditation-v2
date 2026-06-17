@@ -73,6 +73,7 @@
 		<string>Montserrat-SemiBoldItalic.ttf</string>
 		<string>Montserrat-Thin.ttf</string>
 		<string>Montserrat-ThinItalic.ttf</string>
+		<string>MaterialCommunityIcons.ttf</string>
 	</array>
 	<key>UIFileSharingEnabled</key>
     <true/>

@@ -1409,6 +1409,32 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-skia (2.4.2):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React
+    - React-callinvoker
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-slider (4.5.6):
     - DoubleConversion
     - glog
@@ -1837,7 +1863,7 @@ PODS:
     - Yoga
   - RNReactNativeHapticFeedback (1.14.0):
     - React-Core
-  - RNReanimated (3.17.5):
+  - RNReanimated (3.19.5):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1860,10 +1886,10 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated (= 3.17.5)
-    - RNReanimated/worklets (= 3.17.5)
+    - RNReanimated/reanimated (= 3.19.5)
+    - RNReanimated/worklets (= 3.19.5)
     - Yoga
-  - RNReanimated/reanimated (3.17.5):
+  - RNReanimated/reanimated (3.19.5):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1886,9 +1912,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated/apple (= 3.17.5)
+    - RNReanimated/reanimated/apple (= 3.19.5)
     - Yoga
-  - RNReanimated/reanimated/apple (3.17.5):
+  - RNReanimated/reanimated/apple (3.19.5):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1912,7 +1938,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNReanimated/worklets (3.17.5):
+  - RNReanimated/worklets (3.19.5):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1935,9 +1961,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/worklets/apple (= 3.17.5)
+    - RNReanimated/worklets/apple (= 3.19.5)
     - Yoga
-  - RNReanimated/worklets/apple (3.17.5):
+  - RNReanimated/worklets/apple (3.19.5):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2139,6 +2165,7 @@ DEPENDENCIES:
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-skia (from `../node_modules/@shopify/react-native-skia`)"
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - react-native-track-player (from `../node_modules/react-native-track-player`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
@@ -2272,6 +2299,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-skia:
+    :path: "../node_modules/@shopify/react-native-skia"
   react-native-slider:
     :path: "../node_modules/@react-native-community/slider"
   react-native-track-player:
@@ -2404,6 +2433,7 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: 054f34e9b82f02bd40f09cebd4083828b5b2beb6
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-safe-area-context: 562163222d999b79a51577eda2ea8ad2c32b4d06
+  react-native-skia: b26b835177a2b5dc1a56a36ad7e0de23d8311839
   react-native-slider: 78ccabe016aef7418b1a846b31115b4165c4dde6
   react-native-track-player: 6dc2e2633265704b8ab6d8124b80239d4ed1f911
   React-NativeModulesApple: 2c4377e139522c3d73f5df582e4f051a838ff25e
@@ -2442,7 +2472,7 @@ SPEC CHECKSUMS:
   RNFS: 89de7d7f4c0f6bafa05343c578f61118c8282ed8
   RNGestureHandler: ebef699ea17e7c0006c1074e1e423ead60ce0121
   RNReactNativeHapticFeedback: 8364333ca888b1b7ec9d2daf04b010ee5436366e
-  RNReanimated: 2313402fe27fecb7237619e9c6fcee3177f08a65
+  RNReanimated: aeca78e794b87ec881a55fde810a4b23825feb2e
   RNScreens: fcd4717f7c66e65b168d9f58df276ecfbb0c5e6d
   RNSound: 314cc5226453ef4a3314a196c65e8a65e5106a7b
   RNStaticSafeAreaInsets: 4696b82d3a11ba6f3a790159ddb7290f04abd275
@@ -2452,6 +2482,6 @@ SPEC CHECKSUMS:
   SwiftAudioEx: f6aa653770f3a0d3851edaf8d834a30aee4a7646
   Yoga: c758bfb934100bb4bf9cbaccb52557cee35e8bdf
 
-PODFILE CHECKSUM: d746d8dda2d7e7e134db4134f8afed4de28a3057
+PODFILE CHECKSUM: 63e424f96df94ab8080c03e02de6febea43d87eb
 
 COCOAPODS: 1.15.2

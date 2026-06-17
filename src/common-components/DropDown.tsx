@@ -9,17 +9,18 @@ import appEventBus from "../services/appEventBus";
 type Props = PropsWithChildren<{
     value?: any,
     className?: StyleProp<ViewStyle>,
+    buttonClassName?: StyleProp<ViewStyle>,
     onSelected: (item: any)=> void,
     data: Array<any>,
     label?: string
 }>;
 
-function DropDown({value, label, children, className = null, onSelected, data}: Props){
+function DropDown({value, label, children, className = null, buttonClassName = null, onSelected, data}: Props){
 
     return <Div className={className}>
         <SelectDropdown
             onFocus={() => appEventBus.hapticFeedback.light().set(true)}
-            buttonStyle={styles.buttonStyle}
+            buttonStyle={[styles.buttonStyle, buttonClassName]}
             buttonTextStyle={styles.buttonTextStyle}
             dropdownStyle={styles.dropDownStyle}
             rowStyle={styles.dropDownChildRow}

@@ -352,18 +352,28 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-meditation/Pods-meditation-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-meditation/Pods-meditation-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-meditation/Pods-meditation-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		A1B2C3D4E5F6A7B8C9D0E1F2 /* Generate Hermes dSYM */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate Hermes dSYM";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Generate dSYM for the prebuilt Hermes framework so App Store validation passes\nHERMES_FRAMEWORK=\"${BUILT_PRODUCTS_DIR}/hermes.framework/hermes\"\nif [ -f \"${HERMES_FRAMEWORK}\" ]; then\n  dsymutil \"${HERMES_FRAMEWORK}\" -o \"${DWARF_DSYM_FOLDER_PATH}/hermes.framework.dSYM\"\nfi\n";
 		};
 		C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -395,32 +405,14 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-meditation/Pods-meditation-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-meditation/Pods-meditation-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-meditation/Pods-meditation-resources.sh\"\n";
 			showEnvVarsInLog = 0;
-		};
-		A1B2C3D4E5F6A7B8C9D0E1F2 /* Generate Hermes dSYM */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Generate Hermes dSYM";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Generate dSYM for the prebuilt Hermes framework so App Store validation passes\nHERMES_FRAMEWORK=\"${BUILT_PRODUCTS_DIR}/hermes.framework/hermes\"\nif [ -f \"${HERMES_FRAMEWORK}\" ]; then\n  dsymutil \"${HERMES_FRAMEWORK}\" -o \"${DWARF_DSYM_FOLDER_PATH}/hermes.framework.dSYM\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -563,7 +555,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -632,7 +627,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

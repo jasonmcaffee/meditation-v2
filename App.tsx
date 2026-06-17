@@ -1,6 +1,7 @@
 import React, {ReactNode, useEffect, useState} from 'react';
 import TimePage from "./src/components/time-page/TimePage";
 import MeditationSessionsPage from "./src/components/meditation-sessions-page/MeditationSessionsPage";
+import GradientBackground from "./src/common-components/GradientBackground";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import './src/services/audioNotifications';
@@ -25,8 +26,9 @@ const App = () => {
   }, []);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#070810' }}>
       <React.Fragment>
+        <GradientBackground/>
         {timePage}
         {meditationSessionPage}
         {modal}

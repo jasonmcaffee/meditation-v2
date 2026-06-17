@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
         zIndex: 1,
         height: '100%',
         width: '100%',
-        backgroundColor: '#0d0e16',
+        backgroundColor: 'transparent',
     },
     hidden: {
         display: 'none',

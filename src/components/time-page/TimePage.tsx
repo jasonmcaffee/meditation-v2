@@ -9,7 +9,7 @@ import createUnregisterFunction from "../../react-utils/createUnregisterFunction
 import TrackModalSelector from "../../common-components/TrackModalSelector";
 import ConcentricRingsTimer from "../../common-components/ConcentricRingsTimer";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import DropDown from "../../common-components/DropDown";
+import AlarmTimeModal from "./AlarmTimeModal";
 
 /**
  * Main meditation timer page. Layout matches new-design.html exactly:
@@ -31,6 +31,16 @@ function TimePage() {
     const soundSettingsModal = state.shouldDisplaySoundSettingsModal
         ? <SoundSettingsModal onCloseClick={() => state.shouldDisplaySoundSettingsModal = false}/>
         : null;
+    const alarmTimeModal = state.shouldDisplayAlarmTimeModal
+        ? <AlarmTimeModal
+              hours={hours}
+              minutes={minutes}
+              onCloseClick={() => state.shouldDisplayAlarmTimeModal = false}
+          />
+        : null;
+
+    // A non-zero alarm means a time is selected → bell fully opaque; otherwise dim.
+    const isAlarmTimeSelected = alarmMinutes > 0;
 
     useEffect(() => {
         return createUnregisterFunction(
@@ -45,26 +55,8 @@ function TimePage() {
     }
 
     return (
-        <Page pageName={'Timer'} modal={finishSessionModal || soundSettingsModal}>
+        <Page pageName={'Timer'} modal={finishSessionModal || soundSettingsModal || alarmTimeModal}>
             <View style={styles.root}>
-                {/* Alarm pills — padding-top: 40px to match design */}
-                <View style={styles.alarmRow}>
-                    <DropDown
-                        value={hours}
-                        onSelected={h => timePage.setAlarmMinutesFromHoursAndMinutes(h, minutes)}
-                        data={timePage.hourOptions}
-                        label={"hours"}
-                        className={styles.alarmPill}
-                    />
-                    <DropDown
-                        value={minutes}
-                        onSelected={m => timePage.setAlarmMinutesFromHoursAndMinutes(hours, m)}
-                        data={timePage.minuteOptions}
-                        label={"min"}
-                        className={styles.alarmPill}
-                    />
-                </View>
-
                 {/* Ring canvas — flex:1, measured via onLayout */}
                 <View style={styles.canvasArea} onLayout={onLayout}>
                     {containerSize.width > 0 && (
@@ -80,12 +72,25 @@ function TimePage() {
 
                 {/* Bottom controls — matches design padding exactly */}
                 <View style={styles.bottomSection}>
-                    {/* Track selector */}
-                    <TrackModalSelector
-                        options={timePage.scheduledTrackOptions}
-                        currentOption={state.selectedScheduledTrackOption}
-                        onOptionRowClick={o => timePage.setSelectedScheduledTrackOption(o)}
-                    />
+                    {/* Bell (opens alarm time modal) + track selector */}
+                    <View style={styles.audioRow}>
+                        <Pressable
+                            testID="alarm-time-button"
+                            onPress={() => state.shouldDisplayAlarmTimeModal = true}
+                            style={({pressed}) => [styles.bellBtn, pressed && styles.btnPressed]}
+                        >
+                            <MaterialCommunityIcons
+                                name="bell-outline"
+                                size={20}
+                                color={isAlarmTimeSelected ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)'}
+                            />
+                        </Pressable>
+                        <TrackModalSelector
+                            options={timePage.scheduledTrackOptions}
+                            currentOption={state.selectedScheduledTrackOption}
+                            onOptionRowClick={o => timePage.setSelectedScheduledTrackOption(o)}
+                        />
+                    </View>
                     {/* 88×88 circle buttons, 44px gap */}
                     <View style={styles.buttonsRow}>
                         <Pressable
@@ -122,18 +127,24 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
     },
-    // Alarm row — padding-top: 40 matches design's "padding: 40px 22px 4px"
-    alarmRow: {
+    // Bell + audio selector row
+    audioRow: {
         flexDirection: 'row',
-        justifyContent: 'center',
         alignItems: 'center',
-        gap: 14,
-        paddingTop: 40,
-        paddingBottom: 4,
-        paddingHorizontal: 22,
+        justifyContent: 'center',
+        alignSelf: 'stretch',
+        gap: 10,
     },
-    alarmPill: {
-        // Styled by dropdown.scss to match: padding:10 20, border-radius:40, border:rgba(255,255,255,0.1), bg:rgba(255,255,255,0.024)
+    // Bell button — same height as the audio pill, opens the alarm time modal
+    bellBtn: {
+        width: 46,
+        height: 46,
+        borderRadius: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(255,255,255,0.024)',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.09)',
     },
     // Canvas area
     canvasArea: {

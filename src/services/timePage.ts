@@ -17,6 +17,7 @@ class TimePage{
         selected: 1,
         shouldDisplayFinishSessionModal: false,
         shouldDisplaySoundSettingsModal: false,
+        shouldDisplayAlarmTimeModal: false,
         durationData: stopwatch.getDurationData(),
         isStopWatchRunning: stopwatch.isRunning,
         meditationSession: undefined as undefined | IMeditationSession,

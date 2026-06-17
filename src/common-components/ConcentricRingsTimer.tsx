@@ -8,7 +8,6 @@ import {
     Group,
     Path,
     RadialGradient,
-    Rect,
     Skia,
     vec,
 } from '@shopify/react-native-skia';
@@ -50,7 +49,7 @@ const BLOBS: BlobDef[] = [
 const DESIGN_SIZE = 360;
 const BASE_R      = 125;   // ring radius in design units (R in new-design.html)
 const CORE_R      = 92;
-const STEPS       = 48;
+const STEPS       = 80;    // higher segment count → smoother blob contour
 const BUCKETS     = 8;     // alpha buckets for additive particle render
 const COMET_CAP   = 1200;  // max live particles (orig 2400; capped lower for mobile)
 
@@ -180,23 +179,18 @@ function ConcentricRingsTimer({durationData, canvasWidth, canvasHeight, isRunnin
     const cy    = top + (canvasHeight - top - 130 * scale) * 0.44;
     const coreR = CORE_R * scale;
     const ringR = BASE_R * scale;
-    const fontSize  = Math.round(38 * scale);
-    const charW     = Math.round(26 * scale);
+    const fontSize  = Math.round(52 * scale);
+    const charW     = Math.round(36 * scale);
     const blobBlur  = 5 * scale;   // glow halo around the crisp ribbon core (design shadowBlur=7)
+    const crispBlur = 2.2 * scale; // gentle smoothing of the filled blob edges
     const timeChars = durationData.formattedDuration.split('');
 
     return (
         <View style={[styles.canvas, {width: canvasWidth, height: canvasHeight}]}>
             <Canvas style={{width: canvasWidth, height: canvasHeight}}>
-                {/* Page background radial gradient */}
-                <Rect x={0} y={0} width={canvasWidth} height={canvasHeight}>
-                    <RadialGradient
-                        c={vec(cx, canvasHeight * 0.4)}
-                        r={canvasWidth * 0.8}
-                        colors={['#18213c', '#0e1016', '#070709']}
-                        positions={[0, 0.48, 1]}
-                    />
-                </Rect>
+                {/* No opaque background here — the canvas is transparent so the
+                    app-wide GradientBackground shows through, letting the timer
+                    blend seamlessly into the surfaces above and below it. */}
 
                 {/* Aurora blobs — glow pass (blurred halo) then crisp ribbon core.
                     Two passes reproduce canvas shadowBlur: solid ribbon + surrounding glow. */}
@@ -211,7 +205,10 @@ function ConcentricRingsTimer({durationData, canvasWidth, canvasHeight, isRunnin
                 {BLOBS.map((b, i) => {
                     const [r, g, bl] = AURORA[b.ci % AURORA.length];
                     return (
-                        <Path key={`c${i}`} path={blobPaths[i]} color={`rgba(${r},${g},${bl},${b.alpha})`} blendMode={BlendMode.Screen}/>
+                        <Path key={`c${i}`} path={blobPaths[i]} color={`rgba(${r},${g},${bl},${b.alpha})`} blendMode={BlendMode.Screen}>
+                            {/* small blur softens the polygon facets → smooth blob edges */}
+                            <BlurMask blur={crispBlur} style="normal" respectCTM={false}/>
+                        </Path>
                     );
                 })}
 
@@ -240,10 +237,10 @@ function ConcentricRingsTimer({durationData, canvasWidth, canvasHeight, isRunnin
 
                 {/* Head halo — soft glow + bright core = the luminous dot */}
                 <Group blendMode={BlendMode.Plus}>
-                    <Circle cx={hx} cy={hy} r={haloR} color="rgba(255,255,255,0.5)">
+                    <Circle cx={hx} cy={hy} r={haloR} color="rgba(255,255,255,0.22)">
                         <BlurMask blur={6 * scale} style="normal" respectCTM={false}/>
                     </Circle>
-                    <Circle cx={hx} cy={hy} r={haloCoreR} color="rgba(255,255,255,0.95)"/>
+                    <Circle cx={hx} cy={hy} r={haloCoreR} color="rgba(255,255,255,0.8)"/>
                 </Group>
             </Canvas>
 
@@ -313,6 +310,9 @@ function blobPath(b: BlobDef, ap: number, cx: number, cy: number, s: number): st
     const wdr  = b.wphase2 + ap * b.wdriftSpeed;
     const cosr = Math.cos(rot), sinr = Math.sin(rot);
     const PI2  = Math.PI * 2;
+    // Single closed contour traced along the band's outer edge → a fully filled
+    // solid blob (rather than a thin ribbon/band). The fill color renders the
+    // whole disc, so overlapping blobs blend into a filled aurora.
     let d = '';
     for (let i = 0; i <= STEPS; i++) {
         const a   = (i / STEPS) * PI2;
@@ -320,17 +320,9 @@ function blobPath(b: BlobDef, ap: number, cx: number, cy: number, s: number): st
         const wid = b.wMax * s * (0.10 + 0.90 * (0.5 + 0.5 * Math.sin(a * b.wk + wdr)));
         const ro  = cen + wid * 0.5;
         const lx  = Math.cos(a) * ro, ly = Math.sin(a) * ro;
-        d += (i === 0 ? 'M' : 'L') + Math.round(lx * cosr - ly * sinr + bx) + ',' +
-             Math.round(lx * sinr + ly * cosr + by) + ' ';
-    }
-    for (let i = STEPS; i >= 0; i--) {
-        const a   = (i / STEPS) * PI2;
-        const cen = (b.baseR + Math.sin(a * b.w1 + wph) * b.a1 + Math.sin(a * b.w2 - wph * 1.3) * b.a2) * s;
-        const wid = b.wMax * s * (0.10 + 0.90 * (0.5 + 0.5 * Math.sin(a * b.wk + wdr)));
-        const ri  = cen - wid * 0.5;
-        const lx  = Math.cos(a) * ri, ly = Math.sin(a) * ri;
-        d += 'L' + Math.round(lx * cosr - ly * sinr + bx) + ',' +
-             Math.round(lx * sinr + ly * cosr + by) + ' ';
+        // No integer rounding — sub-pixel vertices avoid the faceted/jagged look.
+        d += (i === 0 ? 'M' : 'L') + (lx * cosr - ly * sinr + bx).toFixed(2) + ',' +
+             (lx * sinr + ly * cosr + by).toFixed(2) + ' ';
     }
     return d + 'Z';
 }
