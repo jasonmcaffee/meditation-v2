@@ -54,6 +54,13 @@ function GradientButton({text, onClick, testID}: Props) {
                             positions={[0, 0.55]}
                         />
                     </RoundedRect>
+                    {/* glassy border drawn in Skia (inset 0.5px so the stroke isn't
+                        clipped at the canvas edge) — replaces the RN border, which
+                        otherwise shrank the canvas and darkened the right/bottom edges. */}
+                    <RoundedRect
+                        x={0.5} y={0.5} width={width - 1} height={HEIGHT - 1} r={(HEIGHT - 1) / 2}
+                        style="stroke" strokeWidth={1} color="rgba(255,255,255,0.12)"
+                    />
                 </Canvas>
             )}
             <Text style={styles.text}>{text}</Text>
@@ -69,8 +76,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignSelf: 'stretch',
         overflow: 'hidden',
-        borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.12)',
     },
     pressed: {
         transform: [{scale: 0.98}],

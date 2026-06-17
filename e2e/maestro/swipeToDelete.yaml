@@ -1,0 +1,41 @@
+appId: com.jasonmcaffee.meditation
+---
+# E2E test: a session row can be swiped left to reveal the delete (trash) button.
+# Requires: simulator running + Metro bundler running + a seeded session (id "seed-1").
+# launchApp WITHOUT clearState so the seeded sessions.txt survives.
+
+- launchApp
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "sessions-tab"
+    timeout: 25000
+
+# ── Go to the Sessions tab and confirm the seeded row exists ─────────────────
+- tapOn:
+    id: "sessions-tab"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "session-item-seed-1"
+    timeout: 8000
+
+# ── The delete button must NOT be visible before swiping ─────────────────────
+- assertNotVisible:
+    id: "delete-button-seed-1"
+
+# ── Swipe the row left to reveal the trash (long, slow drag past threshold) ──
+- swipe:
+    start: "90%, 14%"
+    end: "8%, 14%"
+    duration: 1200
+
+- waitForAnimationToEnd
+
+# ── The delete (trash) button must now be revealed ───────────────────────────
+- extendedWaitUntil:
+    visible:
+      id: "delete-button-seed-1"
+    timeout: 5000
+- assertVisible:
+    id: "delete-button-seed-1"

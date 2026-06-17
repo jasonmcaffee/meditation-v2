@@ -5,7 +5,8 @@
 }
 
 .finishSessionModalWindow{
-
+  // Nudge the window down so its top edge clears the Dynamic Island.
+  margin-top: 30px;
 }
 
 .row{

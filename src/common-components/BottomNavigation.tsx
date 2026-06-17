@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import appEventBus from "../services/appEventBus";
 import createUnregisterFunction from "../react-utils/createUnregisterFunction";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 const TIMER_TAB    = 'Timer';
 const SESSIONS_TAB = 'Sessions';
@@ -35,8 +35,8 @@ function BottomNavigation() {
                 <Text style={[styles.omText, {color: timerActive ? activeColor : inactiveColor}]}>ॐ</Text>
             </Pressable>
             <Pressable testID="sessions-tab" onPress={() => goTo(SESSIONS_TAB)} style={styles.tab}>
-                <MaterialCommunityIcons
-                    name="home-outline"
+                <MaterialIcons
+                    name="temple-buddhist"
                     size={24}
                     color={sessionsActive ? activeColor : inactiveColor}
                 />

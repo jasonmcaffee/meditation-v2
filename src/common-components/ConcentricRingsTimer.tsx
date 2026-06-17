@@ -51,7 +51,8 @@ const BASE_R      = 160;   // dot orbit radius in design units — sized so the 
 const CORE_R      = 92;
 const STEPS       = 80;    // higher segment count → smoother blob contour
 const BUCKETS     = 8;     // alpha buckets for additive particle render
-const COMET_CAP   = 1200;  // max live particles (orig 2400; capped lower for mobile)
+const COMET_CAP   = 1350;  // max live particles — bounds tail length & density
+const HEAD_RATE   = (Math.PI * 2) / 60;  // head's angular speed (one lap / 60s)
 
 type Props = {
     durationData: IDurationUpdateData;
@@ -71,6 +72,9 @@ function ConcentricRingsTimer({durationData, canvasWidth, canvasHeight, isRunnin
     const svAp       = useSharedValue(0);                    // aurora/animation phase
     const svT        = useSharedValue(0);                    // wall-clock seconds (for pulse)
     const svHead     = useSharedValue(-Math.PI / 2);         // dot angle around ring
+    const svElapsedMs    = useSharedValue(elapsedMs);        // wall-clock elapsed (source of truth)
+    const svAnchorElapsed= useSharedValue(-1);               // elapsed at last resync anchor
+    const svAnchorTime   = useSharedValue(0);                // frame timestamp (ms) at last anchor
     const svRunning  = useSharedValue(isRunning ? 1 : 0);
     const svReset    = useSharedValue(0);
     const svCx       = useSharedValue(canvasWidth / 2);
@@ -87,16 +91,34 @@ function ConcentricRingsTimer({durationData, canvasWidth, canvasHeight, isRunnin
     }, [canvasWidth, canvasHeight]);
 
     useEffect(() => { svRunning.value = isRunning ? 1 : 0; }, [isRunning]);
+    useEffect(() => { svElapsedMs.value = elapsedMs; }, [elapsedMs]);
     useEffect(() => { if (elapsedMs < 500) { svHead.value = -Math.PI / 2; svReset.value = 1; } }, [elapsedMs < 500]);
 
     // ── Single per-frame worklet: advance phases, simulate + spawn particles ──
-    useFrameCallback(({timeSincePreviousFrame}) => {
+    useFrameCallback(({timestamp, timeSincePreviousFrame}) => {
         'worklet';
         const dt = timeSincePreviousFrame ? Math.min(timeSincePreviousFrame / 1000, 0.05) : 0.016;
         svT.value  = svT.value + dt;
         svAp.value = svAp.value + dt * (svRunning.value ? 0.63 : 0.45);
         const running = svRunning.value;
-        if (running) svHead.value = svHead.value + dt * (Math.PI * 2 / 60);
+
+        // ── Head angle is driven by the stopwatch's wall-clock elapsed time (one full
+        //    lap per 60s), NOT by accumulating frame deltas. We re-anchor every time
+        //    elapsedMs ticks (≈1×/s) and interpolate smoothly with the frame clock in
+        //    between. Because elapsedMs is Date.now()-based it stays exact even after the
+        //    screen sleeps or the app backgrounds (frames pause) — so the head can never
+        //    drift out of sync; it simply snaps back to the true position on resume.
+        if (svElapsedMs.value !== svAnchorElapsed.value) {
+            svAnchorElapsed.value = svElapsedMs.value;
+            svAnchorTime.value = timestamp;
+        }
+        let effElapsed = svAnchorElapsed.value;
+        if (running) {
+            effElapsed = svAnchorElapsed.value + (timestamp - svAnchorTime.value);
+        } else {
+            svAnchorTime.value = timestamp;   // keep fresh so resuming doesn't jump
+        }
+        svHead.value = -Math.PI / 2 + (effElapsed / 1000) * HEAD_RATE;
 
         const arr = particles.value;
         if (svReset.value) { arr.length = 0; svReset.value = 0; }
@@ -109,27 +131,57 @@ function ConcentricRingsTimer({durationData, canvasWidth, canvasHeight, isRunnin
         for (let i = arr.length - 8; i >= 0; i -= 8) {
             arr[i + 4] -= dt;             // life
             if (arr[i + 4] <= 0) { arr.splice(i, 8); continue; }
+            // Turbulence → organic, dynamic motion instead of one clean circular line:
+            // a random walk on radial velocity makes particles wander in and out of the
+            // ring, kept cohesive by a soft spring back toward it. The long-lived tail
+            // wanders strongly; the short-lived ball stays tight.
+            const turb = arr[i + 5] > 5 ? 34 : 7;
+            arr[i + 3] += (Math.random() - 0.5) * turb * dt;   // radial turbulence accel
+            arr[i + 3] += (R - arr[i + 1]) * 0.6 * dt;         // soft spring back to the ring
             arr[i]     += arr[i + 2] * dt; // ang += angVel*dt
             arr[i + 1] += arr[i + 3] * dt; // r += rVel*dt
-            arr[i + 3] *= 0.96;            // rVel damping
+            arr[i + 3] *= 0.94;            // rVel damping (looser → wander persists)
         }
 
         // 2) spawn new particles (exact counts/params from new-design.html)
         const push = (ang: number, r: number, angVel: number, rVel: number, life: number, max: number, size: number, br: number) => {
             arr.push(ang, r, angVel, rVel, life, max, size, br);
         };
+        const TWO_PI = Math.PI * 2;
         if (running) {
-            for (let k = 0; k < 3; k++) {  // bright tight cluster = the dot head
-                push(head + jit() * 0.02, R + jit() * 3.5, jit() * 0.03, jit() * 2,
-                     1.1 + Math.random() * 1.2, 2.3, 0.5 + Math.random() * 0.9, 0.95);
+            // Bright circular BALL at the head. Each particle is sampled from one
+            // consistent point in a disc (single θ for both axes → a true round
+            // cluster), and is given angVel ≈ HEAD_RATE so it co-moves with the head
+            // instead of smearing into an oval behind it.
+            for (let k = 0; k < 3; k++) {
+                const br = 3.375 * Math.sqrt(Math.random());
+                const th = Math.random() * TWO_PI;
+                const dA = (br * Math.cos(th)) / R;
+                const dR = br * Math.sin(th);
+                push(head + dA, R + dR, HEAD_RATE + jit() * 0.012, jit() * 0.7,
+                     1.0 + Math.random() * 1.3, 2.4, 0.4 + Math.random() * 0.95, 0.85 + Math.random() * 0.15);
             }
-            for (let k = 0; k < 4; k++) {  // small particles trailing backward along the ring
-                push(head + jit() * 0.03, R + jit() * 3, -(0.05 + Math.random() * 0.12), jit() * 1.0,
-                     5 + Math.random() * 5, 10, 0.25 + Math.random() * 0.75, 0.45 + Math.random() * 0.4);
+            // Tail. Spawned from inside the SAME ball disc so it grows seamlessly out
+            // of the ball (no gap). Brightness/size start at the ball's level and fade
+            // with age → no seam between head and tail. The backward drift is biased
+            // toward ~0 (random²), so particles pile up densely at the neck and only a
+            // few recede fast → a long, continuously tapering comet tail.
+            for (let k = 0; k < 4; k++) {
+                const br = 3.375 * Math.sqrt(Math.random());
+                const th = Math.random() * TWO_PI;
+                const dA = (br * Math.cos(th)) / R;
+                const dR = br * Math.sin(th);
+                const drift = HEAD_RATE * 3.2 * (Math.random() * Math.random());  // 0..3.2×, biased low → longer reach
+                push(head + dA, R + dR, HEAD_RATE - drift, jit() * 0.9,
+                     16 + Math.random() * 22, 38, 0.3 + Math.random() * 1.0, 0.6 + Math.random() * 0.4);
             }
-        } else {                            // gentle shimmer at the resting dot
-            push(head + jit() * 0.05, R + jit() * 3.5, jit() * 0.02, jit() * 1.0,
-                 1.4 + Math.random() * 1.4, 2.8, 0.4 + Math.random() * 0.8, 0.7);
+        } else {                            // gentle shimmering ball at the resting head
+            for (let k = 0; k < 2; k++) {
+                const br = 3.375 * Math.sqrt(Math.random());
+                const th = Math.random() * TWO_PI;
+                push(head + (br * Math.cos(th)) / R, R + br * Math.sin(th), jit() * 0.02, jit() * 1.0,
+                     1.2 + Math.random() * 1.4, 2.8, 0.35 + Math.random() * 0.85, 0.6 + Math.random() * 0.25);
+            }
         }
 
         // 3) cap
@@ -170,7 +222,6 @@ function ConcentricRingsTimer({durationData, canvasWidth, canvasHeight, isRunnin
         const pulse = 0.5 + 0.5 * Math.sin(svT.value * 0.6);
         return (svRunning.value ? 13 : 9 + pulse * 2) * svScale.value;
     });
-    const haloCoreR = useDerivedValue(() => (svRunning.value ? 4.5 : 3.5) * svScale.value);
 
     // Static layout values (computed once per render)
     const scale = canvasWidth / DESIGN_SIZE;
@@ -231,12 +282,13 @@ function ConcentricRingsTimer({durationData, canvasWidth, canvasHeight, isRunnin
                     />
                 ))}
 
-                {/* Head halo — soft glow + bright core = the luminous dot */}
+                {/* Head glow — a soft luminous halo behind the particle cloud.
+                    No crisp core circle: the head now reads as a cloud of particles
+                    (spawned above) rather than a solid white dot. */}
                 <Group blendMode={BlendMode.Plus}>
-                    <Circle cx={hx} cy={hy} r={haloR} color="rgba(255,255,255,0.22)">
-                        <BlurMask blur={6 * scale} style="normal" respectCTM={false}/>
+                    <Circle cx={hx} cy={hy} r={haloR} color="rgba(255,255,255,0.13)">
+                        <BlurMask blur={9 * scale} style="normal" respectCTM={false}/>
                     </Circle>
-                    <Circle cx={hx} cy={hy} r={haloCoreR} color="rgba(255,255,255,0.8)"/>
                 </Group>
             </Canvas>
 

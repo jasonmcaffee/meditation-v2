@@ -21,8 +21,10 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<string>5</string>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
@@ -31,30 +33,12 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
 	<key>NSCameraUsageDescription</key>
-		<string>This lets you take a photo to attach to a meditation session.</string>
-		<key>NSPhotoLibraryUsageDescription</key>
-		<string>This lets you attach an existing photo to a meditation session.</string>
-		<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>arm64</string>
-	</array>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
+	<string>This lets you take a photo to attach to a meditation session.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This lets you attach an existing photo to a meditation session.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Montserrat-Italic-VariableFont_wght.ttf</string>
@@ -78,12 +62,29 @@
 		<string>Montserrat-Thin.ttf</string>
 		<string>Montserrat-ThinItalic.ttf</string>
 		<string>MaterialCommunityIcons.ttf</string>
+		<string>MaterialIcons.ttf</string>
 	</array>
 	<key>UIFileSharingEnabled</key>
-    <true/>
-    <key>LSSupportsOpeningDocumentsInPlace</key>
-    <true/>
-    <key>UISupportsDocumentBrowser</key>
-    <true/>
+	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arm64</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>

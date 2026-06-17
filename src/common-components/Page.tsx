@@ -31,8 +31,11 @@ function Page({pageName, children, modal}: Props) {
         }));
     }, [fadeAnim]);
 
+    // Inactive pages are hidden with opacity + pointerEvents (NOT display:none). Keeping them laid
+    // out is required for react-native-gesture-handler: recognizers attached while a view is
+    // display:none never activate once it is later revealed, which silently breaks swipe gestures.
     return (
-        <SafeAreaView style={[styles.page, !isVisible && styles.hidden]}>
+        <SafeAreaView style={[styles.page, !isVisible && styles.hidden]} pointerEvents={isVisible ? 'auto' : 'none'}>
             {modal}
             <Animated.View style={[styles.content, {opacity: fadeAnim}]}>
                 {children}
@@ -45,13 +48,12 @@ function Page({pageName, children, modal}: Props) {
 const styles = StyleSheet.create({
     page: {
         position: 'absolute',
-        zIndex: 1,
         height: '100%',
         width: '100%',
         backgroundColor: 'transparent',
     },
     hidden: {
-        display: 'none',
+        opacity: 0,
     },
     content: {
         flex: 1,
