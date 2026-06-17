@@ -16,6 +16,38 @@ jest.mock('react-native-image-picker', () => ({
   launchImageLibrary: jest.fn(() => Promise.resolve({ didCancel: true })),
 }));
 
+// Mock react-native-video (Video player component)
+jest.mock('react-native-video', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  return {
+    __esModule: true,
+    default: (props) => React.createElement(View, { testID: 'video-player', ...props }),
+  };
+});
+
+// Mock react-native-audio-recorder-player (Nitro singleton)
+jest.mock('react-native-audio-recorder-player', () => ({
+  __esModule: true,
+  default: {
+    startRecorder: jest.fn(() => Promise.resolve('/mock/recording.m4a')),
+    stopRecorder: jest.fn(() => Promise.resolve('/mock/recording.m4a')),
+    pauseRecorder: jest.fn(() => Promise.resolve('paused')),
+    resumeRecorder: jest.fn(() => Promise.resolve('resumed')),
+    addRecordBackListener: jest.fn(),
+    removeRecordBackListener: jest.fn(),
+    startPlayer: jest.fn(() => Promise.resolve('started')),
+    stopPlayer: jest.fn(() => Promise.resolve('stopped')),
+    addPlayBackListener: jest.fn(),
+    removePlayBackListener: jest.fn(),
+    mmss: jest.fn((secs) => {
+      const m = Math.floor(secs / 60);
+      const s = secs % 60;
+      return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+    }),
+  },
+}));
+
 // Mock react-native-sound
 jest.mock('react-native-sound', () => {
   const Sound = jest.fn().mockImplementation(() => ({
@@ -160,6 +192,18 @@ jest.mock('react-native-svg', () => {
     Defs: mockComponent('Defs'),
     LinearGradient: mockComponent('LinearGradient'),
     Stop: mockComponent('Stop'),
+  };
+});
+
+// Mock react-native-gesture-handler/ReanimatedSwipeable (subpath import in MeditationSession);
+// the bare-package mock below does not cover subpaths, so the real module would try to load
+// the native RNGestureHandlerModule and throw. Render as a passthrough that keeps children.
+jest.mock('react-native-gesture-handler/ReanimatedSwipeable', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  return {
+    __esModule: true,
+    default: ({ children }) => React.createElement(View, null, children),
   };
 });
 

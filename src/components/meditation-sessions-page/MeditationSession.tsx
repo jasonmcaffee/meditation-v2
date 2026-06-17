@@ -4,13 +4,13 @@ import StarRating from 'react-native-star-rating-widget';
 // @ts-ignore
 import * as styles from "../../style/components/meditation-page/meditation-session.scss";
 import Div from "../../common-components/Div";
-import IMeditationSession, {getFormattedDate, getFormattedDuration} from "../../models/IMeditationSession";
+import IMeditationSession, {getFormattedDate, getFormattedDuration, getSessionMedia} from "../../models/IMeditationSession";
 import {Text, View} from "react-native";
 import ReanimatedSwipeable from "react-native-gesture-handler/ReanimatedSwipeable";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import GradientStar from "../../common-components/GradientStar";
-import PhotoThumbnailRow from "../../common-components/PhotoThumbnailRow";
-import FullScreenPhotoViewer from "../../common-components/FullScreenPhotoViewer";
+import MediaThumbnailRow from "../../common-components/MediaThumbnailRow";
+import MediaViewer from "../../common-components/MediaViewer";
 
 type Props = PropsWithChildren<{
     onDeleteClick: (i: IMeditationSession) => void,
@@ -25,7 +25,7 @@ type Props = PropsWithChildren<{
  */
 function MeditationSession({children, onDeleteClick, meditationSession}: Props){
     const [viewerIndex, setViewerIndex] = useState<number | null>(null);
-    const photos = meditationSession.photos ?? [];
+    const media = getSessionMedia(meditationSession);
 
     return <ReanimatedSwipeable renderRightActions={() => renderRightActions(meditationSession.id, () => onDeleteClick(meditationSession))}>
         <Div key={meditationSession.id} testID={`session-item-${meditationSession.id}`} className={styles.meditationSession}>
@@ -51,12 +51,12 @@ function MeditationSession({children, onDeleteClick, meditationSession}: Props){
                 <Text style={styles.notes}>{meditationSession.notes}</Text>
             </Div>
             }
-            {photos.length > 0 &&
-            <PhotoThumbnailRow photos={photos} onThumbnailClick={(i) => setViewerIndex(i)}/>
+            {media.length > 0 &&
+            <MediaThumbnailRow media={media} onMediaClick={(i) => setViewerIndex(i)}/>
             }
         </Div>
         {viewerIndex !== null &&
-            <FullScreenPhotoViewer photos={photos} startIndex={viewerIndex} onCloseClick={() => setViewerIndex(null)}/>
+            <MediaViewer media={media} startIndex={viewerIndex} onCloseClick={() => setViewerIndex(null)}/>
         }
     </ReanimatedSwipeable>;
 }

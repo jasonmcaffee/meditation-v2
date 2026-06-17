@@ -1,11 +1,11 @@
 import { MeditationSessionRepository } from '../../repository/meditationSessionRepository';
 import IMeditationSession from '../../models/IMeditationSession';
-import photoService from '../../services/photoService';
+import mediaService from '../../services/mediaService';
 
-jest.mock('../../services/photoService', () => ({
+jest.mock('../../services/mediaService', () => ({
   __esModule: true,
   default: {
-    deletePhotos: jest.fn(() => Promise.resolve()),
+    deleteMedia: jest.fn(() => Promise.resolve()),
   },
 }));
 
@@ -25,25 +25,42 @@ beforeEach(() => {
 });
 
 describe('MeditationSessionRepository.deleteMeditationSession', () => {
-  it('deletes the copied photo files for the session being removed', async () => {
+  it('deletes the copied media files for the session being removed', async () => {
+    const repo = new MeditationSessionRepository();
+    const session = makeSession({ media: [{ fileName: 'a.jpg', type: 'photo' }, { fileName: 'v.mp4', type: 'video' }] });
+    repo.dataContainer = { meditationSessions: [session] };
+
+    await repo.deleteMeditationSession(session);
+
+    expect(mediaService.deleteMedia).toHaveBeenCalledWith([
+      { fileName: 'a.jpg', type: 'photo' },
+      { fileName: 'v.mp4', type: 'video' },
+    ]);
+    expect(repo.dataContainer.meditationSessions).toHaveLength(0);
+  });
+
+  it('deletes legacy photo files (session.photos) for the session being removed', async () => {
     const repo = new MeditationSessionRepository();
     const session = makeSession({ photos: ['a.jpg', 'b.jpg'] });
     repo.dataContainer = { meditationSessions: [session] };
 
     await repo.deleteMeditationSession(session);
 
-    expect(photoService.deletePhotos).toHaveBeenCalledWith(['a.jpg', 'b.jpg']);
+    expect(mediaService.deleteMedia).toHaveBeenCalledWith([
+      { fileName: 'a.jpg', type: 'photo', legacy: true },
+      { fileName: 'b.jpg', type: 'photo', legacy: true },
+    ]);
     expect(repo.dataContainer.meditationSessions).toHaveLength(0);
   });
 
-  it('does not call deletePhotos for a session without photos', async () => {
+  it('does not call deleteMedia for a session without media', async () => {
     const repo = new MeditationSessionRepository();
     const session = makeSession();
     repo.dataContainer = { meditationSessions: [session] };
 
     await repo.deleteMeditationSession(session);
 
-    expect(photoService.deletePhotos).not.toHaveBeenCalled();
+    expect(mediaService.deleteMedia).not.toHaveBeenCalled();
     expect(repo.dataContainer.meditationSessions).toHaveLength(0);
   });
 });

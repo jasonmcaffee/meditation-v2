@@ -12,6 +12,34 @@
   height: 80%;
 }
 
+.playerWrapper{
+  width: 100%;
+  height: 80%;
+  align-items: center;
+  justify-content: center;
+}
+
+.video{
+  width: 100%;
+  height: 100%;
+}
+
+// Audio: the player itself is a thin control strip; a big waveform icon sits behind it.
+.audioPlayer{
+  width: 100%;
+  height: 120px;
+}
+
+.audioIcon{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 120px;
+  align-items: center;
+  justify-content: center;
+}
+
 .closeButton{
   position: absolute;
   top: 40px;

@@ -1,37 +1,39 @@
 import React, {PropsWithChildren, useRef, useState} from "react";
-import {Pressable, Text, TextInput} from 'react-native';
+import {Pressable, Text, TextInput, View} from 'react-native';
 // @ts-ignore
 import * as styles from "../../style/components/time-page/finish-session-modal.scss";
 import Div from "../../common-components/Div";
 import Modal from "../../common-components/Modal";
-import IMeditationSession, {getFormattedDuration} from "../../models/IMeditationSession";
+import IMeditationSession, {getFormattedDuration, IMediaItem} from "../../models/IMeditationSession";
 //@ts-ignore
 import StarRating from 'react-native-star-rating-widget';
 import GradientButton from "../../common-components/GradientButton";
 import GradientStar from "../../common-components/GradientStar";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import PhotoThumbnailRow from "../../common-components/PhotoThumbnailRow";
-import FullScreenPhotoViewer from "../../common-components/FullScreenPhotoViewer";
-import photoService from "../../services/photoService";
+import MediaThumbnailRow from "../../common-components/MediaThumbnailRow";
+import MediaViewer from "../../common-components/MediaViewer";
+import MediaPickerModal from "./MediaPickerModal";
+import mediaService from "../../services/mediaService";
 
 type Props = PropsWithChildren<{
     onCloseClick?: ()=> void,
-    onSaveClick?: (notes: string, rating: number, photos: string[])=> void,
+    onSaveClick?: (notes: string, rating: number, media: IMediaItem[])=> void,
     meditationSession: IMeditationSession,
 }>;
 
 /**
- * Dark glassmorphic modal for saving a finished session. Accepts notes, a star rating,
- * and photos (captured via camera or attached from the gallery). Photos are copied into
- * the app data dir on attach; unsaved photos are cleaned up if the modal is closed.
+ * Dark glassmorphic modal for saving a finished session. Accepts notes, a star rating, and media
+ * (photos, videos, audio added via the media picker). Media is copied into the app data dir as it
+ * is attached; unsaved media is cleaned up if the modal is closed without saving.
  */
 function FinishSessionModal({meditationSession, children, onCloseClick, onSaveClick}: Props) {
     const [rating, setRating] = useState(0);
     const notesRef = useRef<string>(meditationSession.notes);
     const [notes, setNotes] = useState<string>(meditationSession.notes);
-    const [photos, setPhotos] = useState<string[]>([]);
-    const photosRef = useRef<string[]>([]);
+    const [media, setMedia] = useState<IMediaItem[]>([]);
+    const mediaRef = useRef<IMediaItem[]>([]);
     const savedRef = useRef<boolean>(false);
+    const [showMediaPicker, setShowMediaPicker] = useState(false);
     const [viewerIndex, setViewerIndex] = useState<number | null>(null);
 
     function handleNotesChange(text: string) {
@@ -39,41 +41,40 @@ function FinishSessionModal({meditationSession, children, onCloseClick, onSaveCl
         setNotes(text);
     }
 
-    function setPhotosState(next: string[]) {
-        photosRef.current = next;
-        setPhotos(next);
+    function setMediaState(next: IMediaItem[]) {
+        mediaRef.current = next;
+        setMedia(next);
     }
 
-    async function handleCapturePhoto() {
-        const fileName = await photoService.capturePhoto();
-        if (fileName) { setPhotosState([...photosRef.current, fileName]); }
+    function handleMediaAdded(item: IMediaItem) {
+        setMediaState([...mediaRef.current, item]);
     }
 
-    async function handlePickPhoto() {
-        const fileName = await photoService.pickPhoto();
-        if (fileName) { setPhotosState([...photosRef.current, fileName]); }
-    }
-
-    async function handleRemovePhoto(fileName: string) {
-        await photoService.deletePhotos([fileName]);
-        setPhotosState(photosRef.current.filter(p => p !== fileName));
+    async function handleRemoveMedia(index: number) {
+        const item = mediaRef.current[index];
+        if (!item) { return; }
+        await mediaService.deleteMedia([item]);
+        setMediaState(mediaRef.current.filter((_, i) => i !== index));
     }
 
     function handleSave() {
         savedRef.current = true;
-        onSaveClick && onSaveClick(notesRef.current, rating, photosRef.current);
+        onSaveClick && onSaveClick(notesRef.current, rating, mediaRef.current);
     }
 
     // Closing without saving must not leave orphaned copied files behind.
     async function handleClose() {
-        if (!savedRef.current && photosRef.current.length) {
-            await photoService.deletePhotos(photosRef.current);
+        if (!savedRef.current && mediaRef.current.length) {
+            await mediaService.deleteMedia(mediaRef.current);
         }
         onCloseClick && onCloseClick();
     }
 
+    const mediaPicker = showMediaPicker
+        ? <MediaPickerModal onMediaAdded={handleMediaAdded} onCloseClick={() => setShowMediaPicker(false)}/>
+        : null;
     const viewer = viewerIndex !== null
-        ? <FullScreenPhotoViewer photos={photos} startIndex={viewerIndex} onCloseClick={() => setViewerIndex(null)}/>
+        ? <MediaViewer media={media} startIndex={viewerIndex} onCloseClick={() => setViewerIndex(null)}/>
         : null;
 
     return <Modal onCloseClick={handleClose} className={styles.finishSessionModal} windowClassName={styles.finishSessionModalWindow}>
@@ -92,25 +93,15 @@ function FinishSessionModal({meditationSession, children, onCloseClick, onSaveCl
                 placeholder={"Notes about your session"}
                 placeholderTextColor={"rgba(255,255,255,0.3)"}
             />
-        </Div>
-        <Div className={styles.photoRow}>
-            <Pressable testID="capture-photo-button" style={({pressed}) => [styles.photoButton, pressed && styles.photoButtonPressed]} onPress={handleCapturePhoto}>
-                <Div className={styles.photoButtonIconCircle}>
-                    <MaterialCommunityIcons name="camera-outline" size={22} color="#ffffff"/>
-                </Div>
-                <Text style={styles.photoButtonLabel}>Take Photo</Text>
-            </Pressable>
-            <Pressable testID="pick-photo-button" style={({pressed}) => [styles.photoButton, pressed && styles.photoButtonPressed]} onPress={handlePickPhoto}>
-                <Div className={styles.photoButtonIconCircle}>
-                    <MaterialCommunityIcons name="image-multiple-outline" size={22} color="#ffffff"/>
-                </Div>
-                <Text style={styles.photoButtonLabel}>Add Photo</Text>
+            <Pressable testID="new-media-button" style={({pressed}) => [styles.newMediaButton, pressed && styles.newMediaButtonPressed]} onPress={() => setShowMediaPicker(true)}>
+                <MaterialCommunityIcons name="plus" size={26} color="#ffffff"/>
             </Pressable>
         </Div>
-        <PhotoThumbnailRow
-            photos={photos}
-            onThumbnailClick={(i) => setViewerIndex(i)}
-            onRemoveClick={handleRemovePhoto}
+        <MediaThumbnailRow
+            media={media}
+            onMediaClick={(i) => setViewerIndex(i)}
+            onRemoveClick={handleRemoveMedia}
+            testIDPrefix="finish-media"
         />
         <Div className={styles.rowThree}>
             <StarRating
@@ -124,6 +115,7 @@ function FinishSessionModal({meditationSession, children, onCloseClick, onSaveCl
         <Div className={styles.rowFour}>
             <GradientButton testID="save-button" onClick={handleSave} text={"Save"}/>
         </Div>
+        {mediaPicker}
         {viewer}
     </Modal>
 }

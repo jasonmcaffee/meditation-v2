@@ -1,18 +1,23 @@
 import React from 'react';
 import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import FinishSessionModal from '../src/components/time-page/FinishSessionModal';
-import IMeditationSession from '../src/models/IMeditationSession';
+import IMeditationSession, { IMediaItem } from '../src/models/IMeditationSession';
 
-jest.mock('../src/services/photoService', () => ({
+jest.mock('../src/services/mediaService', () => ({
   __esModule: true,
   default: {
     capturePhoto: jest.fn(),
     pickPhoto: jest.fn(),
-    deletePhotos: jest.fn(() => Promise.resolve()),
+    captureVideo: jest.fn(),
+    pickVideo: jest.fn(),
+    saveRecordedAudio: jest.fn(),
+    deleteMedia: jest.fn(() => Promise.resolve()),
   },
 }));
 
-const photoService = require('../src/services/photoService').default;
+const mediaService = require('../src/services/mediaService').default;
+
+const photoItem: IMediaItem = { fileName: 'photo-1.jpg', type: 'photo' };
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -28,6 +33,16 @@ function makeSession(overrides: Partial<IMeditationSession> = {}): IMeditationSe
     rating: 0,
     ...overrides,
   };
+}
+
+/** Open the media picker and attach a photo via the camera, returning the render result. */
+async function attachPhotoViaCamera(utils: ReturnType<typeof render>) {
+  await act(async () => {
+    fireEvent.press(utils.getByTestId('new-media-button'));
+  });
+  await act(async () => {
+    fireEvent.press(utils.getByTestId('media-take-photo-button'));
+  });
 }
 
 describe('FinishSessionModal', () => {
@@ -88,22 +103,11 @@ describe('FinishSessionModal', () => {
   it('calls onCloseClick when the close (X) button is pressed', () => {
     const onCloseClick = jest.fn();
     const session = makeSession();
-    const { getByTestId } = render(
-      <FinishSessionModal meditationSession={session} onCloseClick={onCloseClick} />
-    );
-    // The Modal renders an IconButton with faClose; it wraps in a Div with accessible press
-    // We fire on the first pressable element that is the close button (icon button)
-    // Fall back: press the backdrop dismiss area by looking at all pressable elements
-    // Since IconButton renders a Pressable via Div, we can test via accessible label
-    // or we look at the text content 'icon' from our FontAwesomeIcon mock
-    const closeButtons = getByTestId ? undefined : undefined; // testID not set, use query
-    // The close icon renders as Text with content 'icon' via our mock
-    // If multiple 'icon' texts exist, we want the first one (close button)
     const { getAllByText } = render(
       <FinishSessionModal meditationSession={session} onCloseClick={onCloseClick} />
     );
+    // The modal close button is the first MaterialCommunityIcons 'icon' rendered.
     const iconElements = getAllByText('icon');
-    // The close button is the first icon in the modal
     fireEvent.press(iconElements[0]);
 
     expect(onCloseClick).toHaveBeenCalledTimes(1);
@@ -123,107 +127,118 @@ describe('FinishSessionModal', () => {
     expect(onCloseClick).not.toHaveBeenCalled();
   });
 
-  describe('photos', () => {
+  describe('media', () => {
     it('shows a thumbnail after capturing a photo with the camera', async () => {
-      photoService.capturePhoto.mockResolvedValue('photo-1.jpg');
-      const { getByTestId } = render(<FinishSessionModal meditationSession={makeSession()} />);
+      mediaService.capturePhoto.mockResolvedValue(photoItem);
+      const utils = render(<FinishSessionModal meditationSession={makeSession()} />);
 
-      await act(async () => {
-        fireEvent.press(getByTestId('capture-photo-button'));
-      });
+      await attachPhotoViaCamera(utils);
 
-      await waitFor(() => expect(getByTestId('session-thumbnail-0')).toBeTruthy());
+      await waitFor(() => expect(utils.getByTestId('finish-media-0')).toBeTruthy());
     });
 
     it('shows a thumbnail after attaching a photo from the gallery', async () => {
-      photoService.pickPhoto.mockResolvedValue('photo-2.jpg');
-      const { getByTestId } = render(<FinishSessionModal meditationSession={makeSession()} />);
+      mediaService.pickPhoto.mockResolvedValue({ fileName: 'photo-2.jpg', type: 'photo' });
+      const utils = render(<FinishSessionModal meditationSession={makeSession()} />);
 
       await act(async () => {
-        fireEvent.press(getByTestId('pick-photo-button'));
+        fireEvent.press(utils.getByTestId('new-media-button'));
+      });
+      await act(async () => {
+        fireEvent.press(utils.getByTestId('media-add-photo-button'));
       });
 
-      await waitFor(() => expect(getByTestId('session-thumbnail-0')).toBeTruthy());
+      await waitFor(() => expect(utils.getByTestId('finish-media-0')).toBeTruthy());
     });
 
-    it('passes attached photos to onSaveClick', async () => {
-      photoService.capturePhoto.mockResolvedValue('photo-1.jpg');
+    it('shows a tile after recording audio', async () => {
+      mediaService.saveRecordedAudio.mockResolvedValue({ fileName: 'audio-1.m4a', type: 'audio' });
+      const utils = render(<FinishSessionModal meditationSession={makeSession()} />);
+
+      await act(async () => {
+        fireEvent.press(utils.getByTestId('new-media-button'));
+      });
+      await act(async () => {
+        fireEvent.press(utils.getByTestId('media-record-audio-button'));
+      });
+      await act(async () => {
+        fireEvent.press(utils.getByTestId('audio-stop-button'));
+      });
+      await act(async () => {
+        fireEvent.press(utils.getByTestId('audio-save-button'));
+      });
+
+      await waitFor(() => expect(utils.getByTestId('finish-media-0')).toBeTruthy());
+    });
+
+    it('passes attached media to onSaveClick', async () => {
+      mediaService.capturePhoto.mockResolvedValue(photoItem);
       const onSaveClick = jest.fn();
-      const { getByTestId } = render(
+      const utils = render(
         <FinishSessionModal meditationSession={makeSession()} onSaveClick={onSaveClick} />
       );
 
-      await act(async () => {
-        fireEvent.press(getByTestId('capture-photo-button'));
-      });
-      await waitFor(() => expect(getByTestId('session-thumbnail-0')).toBeTruthy());
+      await attachPhotoViaCamera(utils);
+      await waitFor(() => expect(utils.getByTestId('finish-media-0')).toBeTruthy());
 
-      fireEvent.press(getByTestId('save-button'));
+      fireEvent.press(utils.getByTestId('save-button'));
 
-      expect(onSaveClick).toHaveBeenCalledWith('', expect.any(Number), ['photo-1.jpg']);
+      expect(onSaveClick).toHaveBeenCalledWith('', expect.any(Number), [photoItem]);
     });
 
     it('does not add a thumbnail when the picker is cancelled', async () => {
-      photoService.capturePhoto.mockResolvedValue(null);
-      const { getByTestId, queryByTestId } = render(<FinishSessionModal meditationSession={makeSession()} />);
+      mediaService.capturePhoto.mockResolvedValue(null);
+      const utils = render(<FinishSessionModal meditationSession={makeSession()} />);
 
-      await act(async () => {
-        fireEvent.press(getByTestId('capture-photo-button'));
-      });
+      await attachPhotoViaCamera(utils);
 
-      expect(queryByTestId('session-thumbnail-0')).toBeNull();
+      expect(utils.queryByTestId('finish-media-0')).toBeNull();
     });
 
-    it('removes a photo and deletes its file when the remove badge is tapped', async () => {
-      photoService.capturePhoto.mockResolvedValue('photo-1.jpg');
-      const { getByTestId, queryByTestId } = render(<FinishSessionModal meditationSession={makeSession()} />);
+    it('removes media and deletes its file when the remove badge is tapped', async () => {
+      mediaService.capturePhoto.mockResolvedValue(photoItem);
+      const utils = render(<FinishSessionModal meditationSession={makeSession()} />);
+
+      await attachPhotoViaCamera(utils);
+      await waitFor(() => expect(utils.getByTestId('finish-media-0')).toBeTruthy());
 
       await act(async () => {
-        fireEvent.press(getByTestId('capture-photo-button'));
-      });
-      await waitFor(() => expect(getByTestId('session-thumbnail-0')).toBeTruthy());
-
-      await act(async () => {
-        fireEvent.press(getByTestId('session-thumbnail-remove-0'));
+        fireEvent.press(utils.getByTestId('finish-media-remove-0'));
       });
 
-      expect(photoService.deletePhotos).toHaveBeenCalledWith(['photo-1.jpg']);
-      expect(queryByTestId('session-thumbnail-0')).toBeNull();
+      expect(mediaService.deleteMedia).toHaveBeenCalledWith([photoItem]);
+      expect(utils.queryByTestId('finish-media-0')).toBeNull();
     });
 
-    it('deletes unsaved photos when the modal is closed without saving', async () => {
-      photoService.capturePhoto.mockResolvedValue('photo-1.jpg');
+    it('deletes unsaved media when the modal is closed without saving', async () => {
+      mediaService.capturePhoto.mockResolvedValue(photoItem);
       const onCloseClick = jest.fn();
-      const { getByTestId, getAllByText } = render(
+      const utils = render(
         <FinishSessionModal meditationSession={makeSession()} onCloseClick={onCloseClick} />
       );
 
-      await act(async () => {
-        fireEvent.press(getByTestId('capture-photo-button'));
-      });
-      await waitFor(() => expect(getByTestId('session-thumbnail-0')).toBeTruthy());
+      await attachPhotoViaCamera(utils);
+      await waitFor(() => expect(utils.getByTestId('finish-media-0')).toBeTruthy());
 
       // Press the modal close (X) button — rendered as the first MaterialCommunityIcons 'icon'.
       await act(async () => {
-        fireEvent.press(getAllByText('icon')[0]);
+        fireEvent.press(utils.getAllByText('icon')[0]);
       });
 
-      expect(photoService.deletePhotos).toHaveBeenCalledWith(['photo-1.jpg']);
+      expect(mediaService.deleteMedia).toHaveBeenCalledWith([photoItem]);
       expect(onCloseClick).toHaveBeenCalledTimes(1);
     });
 
-    it('does NOT delete photos when the modal is saved', async () => {
-      photoService.capturePhoto.mockResolvedValue('photo-1.jpg');
-      const { getByTestId } = render(<FinishSessionModal meditationSession={makeSession()} onSaveClick={jest.fn()} />);
+    it('does NOT delete media when the modal is saved', async () => {
+      mediaService.capturePhoto.mockResolvedValue(photoItem);
+      const utils = render(<FinishSessionModal meditationSession={makeSession()} onSaveClick={jest.fn()} />);
 
-      await act(async () => {
-        fireEvent.press(getByTestId('capture-photo-button'));
-      });
-      await waitFor(() => expect(getByTestId('session-thumbnail-0')).toBeTruthy());
+      await attachPhotoViaCamera(utils);
+      await waitFor(() => expect(utils.getByTestId('finish-media-0')).toBeTruthy());
 
-      fireEvent.press(getByTestId('save-button'));
+      fireEvent.press(utils.getByTestId('save-button'));
 
-      expect(photoService.deletePhotos).not.toHaveBeenCalled();
+      expect(mediaService.deleteMedia).not.toHaveBeenCalled();
     });
   });
 });

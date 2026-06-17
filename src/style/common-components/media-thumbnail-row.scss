@@ -21,6 +21,13 @@
   background-color: $glassCard;
 }
 
+// Video / audio tiles that don't have a real image — center an icon on a tinted tile.
+.iconTile{
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(124, 92, 208, 0.22);
+}
+
 .removeBadge{
   position: absolute;
   top: -6px;

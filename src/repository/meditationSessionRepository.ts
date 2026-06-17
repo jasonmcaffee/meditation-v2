@@ -1,8 +1,8 @@
-import IMeditationSession from "../models/IMeditationSession";
+import IMeditationSession, {getSessionMedia} from "../models/IMeditationSession";
 import fileSystem, {baseDirectory} from "../services/fileSystem";
 import IDataContainer from "../models/DataContainer";
 import appEventBus from "../services/appEventBus";
-import photoService from "../services/photoService";
+import mediaService from "../services/mediaService";
 
 const sessionsDataFilePath = baseDirectory + '/sessions.txt';
 
@@ -48,7 +48,8 @@ export class MeditationSessionRepository {
         const index = dataContainer.meditationSessions.findIndex( s => s.id == meditationSession.id);
         if(index < 0){ return console.log(`no meditation session exists.`) }
         const session = dataContainer.meditationSessions[index];
-        if(session.photos?.length){ await photoService.deletePhotos(session.photos); }
+        const media = getSessionMedia(session);
+        if(media.length){ await mediaService.deleteMedia(media); }
         dataContainer.meditationSessions.splice(index, 1);
         await this.saveDataContainer(dataContainer);
         appEventBus.meditationSessionRepository.meditationSessionsChanged().set(dataContainer.meditationSessions);

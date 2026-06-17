@@ -1,0 +1,157 @@
+@import "./src/style/common";
+
+.overlay{
+  flex: 1;
+  background-color: rgba(0, 0, 0, 0.85);
+  align-items: center;
+  justify-content: center;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.panel{
+  width: 100%;
+  background-color: $modalWindowBackgroundColor;
+  border-radius: 20px;
+  border-width: 1px;
+  border-color: $glassBorder;
+  padding: 18px;
+}
+
+.header{
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.title{
+  @extend %font;
+  font-size: 18px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.closeButton{
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+}
+
+// Pill action button (Take Photo, Add Photo, …) with a tinted icon circle.
+.actionButton{
+  flex-direction: row;
+  align-items: center;
+  height: 56px;
+  border-radius: 16px;
+  background-color: rgba(255, 255, 255, 0.06);
+  border-width: 1px;
+  border-color: rgba(255, 255, 255, 0.12);
+  padding-left: 12px;
+  padding-right: 16px;
+  margin-bottom: 10px;
+}
+
+.actionButtonPressed{
+  transform: scale(0.98);
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.actionIconCircle{
+  width: 38px;
+  height: 38px;
+  border-radius: 19px;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(124, 92, 208, 0.28);
+  border-width: 1px;
+  border-color: rgba(255, 255, 255, 0.18);
+  margin-right: 14px;
+}
+
+.actionLabel{
+  @extend %font;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+// Audio recorder panel
+.recorder{
+  align-items: center;
+  justify-content: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.timer{
+  @extend %font;
+  font-size: 40px;
+  font-weight: 200;
+  letter-spacing: 2px;
+  color: #f3f4f7;
+  margin-bottom: 18px;
+}
+
+.recordButton{
+  width: 84px;
+  height: 84px;
+  border-radius: 42px;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(214, 76, 76, 0.9);
+  border-width: 1px;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.recordedActions{
+  flex-direction: row;
+  align-items: center;
+}
+
+.secondaryButton{
+  height: 50px;
+  border-radius: 25px;
+  align-items: center;
+  justify-content: center;
+  padding-left: 22px;
+  padding-right: 22px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-width: 1px;
+  border-color: rgba(255, 255, 255, 0.14);
+  margin-right: 12px;
+}
+
+.secondaryLabel{
+  @extend %font;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.saveButton{
+  height: 50px;
+  border-radius: 25px;
+  align-items: center;
+  justify-content: center;
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: rgba(124, 92, 208, 0.85);
+  border-width: 1px;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.saveLabel{
+  @extend %font;
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.recorderHint{
+  @extend %font;
+  font-size: 13px;
+  color: $textSecondary;
+  margin-top: 16px;
+}

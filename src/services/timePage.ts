@@ -1,7 +1,7 @@
 import stopwatch  from "./stopwatch";
 import {useState} from "react";
 import FinishSessionModal from "../components/time-page/FinishSessionModal";
-import IMeditationSession from "../models/IMeditationSession";
+import IMeditationSession, {IMediaItem} from "../models/IMeditationSession";
 import meditationSessionRepository from "../repository/meditationSessionRepository";
 import {pageState} from "../react-utils/proxyUseState";
 import {soundOptionsArray} from "../config/soundFiles";
@@ -53,14 +53,14 @@ class TimePage{
         this.pageState!.shouldDisplayFinishSessionModal = true;
     }
 
-    async saveSession(notes: string, rating: number, photos: string[] = []){
+    async saveSession(notes: string, rating: number, media: IMediaItem[] = []){
         try {
             const session = this.pageState!.meditationSession;
             if(!session) { return console.warn('[timePage] saveSession: no meditationSession set'); }
-            console.log('[timePage] saveSession called', { notes, rating, photos, sessionId: session.id });
+            console.log('[timePage] saveSession called', { notes, rating, media, sessionId: session.id });
             session.notes = notes;
             session.rating = rating;
-            session.photos = photos;
+            session.media = media;
             await meditationSessionRepository.saveMeditationSession(session);
             console.log('[timePage] saveSession complete');
             this.pageState!.meditationSession = undefined;
