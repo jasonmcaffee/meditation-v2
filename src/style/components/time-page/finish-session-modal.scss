@@ -5,8 +5,11 @@
 }
 
 .finishSessionModalWindow{
-  // Nudge the window down so its top edge clears the Dynamic Island.
+  // Nudge the window down so its top edge clears the Dynamic Island, and grow to fill the
+  // available height so the notes area can expand into otherwise-wasted space.
   margin-top: 30px;
+  margin-bottom: 34px;
+  flex: 1;
 }
 
 .row{
@@ -19,9 +22,11 @@
   display: flex;
 }
 
+// Notes row grows to consume the free vertical space between the duration and the stars.
 .rowTwo{
   @extend .row;
   position: relative;
+  flex: 1;
 }
 
 .rowThree{
@@ -34,24 +39,24 @@
   @extend .row;
 }
 
-// Floating "+" button anchored to the bottom-right corner of the notes box; opens the media picker.
+// Frosted-glass paperclip button anchored to the bottom-right of the notes box; opens the media picker.
 .newMediaButton{
   position: absolute;
   right: 10px;
   bottom: 10px;
-  width: 46px;
-  height: 46px;
-  border-radius: 23px;
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
   align-items: center;
   justify-content: center;
-  background-color: rgba(124, 92, 208, 0.85);
+  background-color: rgba(255, 255, 255, 0.12);
   border-width: 1px;
-  border-color: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.28);
 }
 
 .newMediaButtonPressed{
   transform: scale(0.94);
-  background-color: rgba(124, 92, 208, 1);
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .font{
@@ -85,7 +90,8 @@
   border-width: 1px;
   border-color: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  height: 200px;
+  flex: 1;
+  min-height: 140px;
   padding: 14px;
   font-size: 16px;
   line-height: 22px;

@@ -1,9 +1,10 @@
-import React, {PropsWithChildren, useRef, useState} from "react";
-import {Pressable, Text, TextInput, View} from 'react-native';
+import React, {PropsWithChildren, useEffect, useRef, useState} from "react";
+import {InteractionManager, Pressable, Text, TextInput} from 'react-native';
 // @ts-ignore
 import * as styles from "../../style/components/time-page/finish-session-modal.scss";
 import Div from "../../common-components/Div";
 import Modal from "../../common-components/Modal";
+import useKeyboardHeight from "../../hooks/useKeyboardHeight";
 import IMeditationSession, {getFormattedDuration, IMediaItem} from "../../models/IMeditationSession";
 //@ts-ignore
 import StarRating from 'react-native-star-rating-widget';
@@ -27,14 +28,23 @@ type Props = PropsWithChildren<{
  * is attached; unsaved media is cleaned up if the modal is closed without saving.
  */
 function FinishSessionModal({meditationSession, children, onCloseClick, onSaveClick}: Props) {
+    const keyboardHeight = useKeyboardHeight();
     const [rating, setRating] = useState(0);
     const notesRef = useRef<string>(meditationSession.notes);
+    const notesInputRef = useRef<TextInput>(null);
     const [notes, setNotes] = useState<string>(meditationSession.notes);
     const [media, setMedia] = useState<IMediaItem[]>([]);
     const mediaRef = useRef<IMediaItem[]>([]);
     const savedRef = useRef<boolean>(false);
     const [showMediaPicker, setShowMediaPicker] = useState(false);
     const [viewerIndex, setViewerIndex] = useState<number | null>(null);
+
+    // autoFocus is unreliable on physical iOS devices for an input in a freshly-mounted modal, so
+    // focus explicitly once the open interaction settles — this reliably raises the keyboard.
+    useEffect(() => {
+        const task = InteractionManager.runAfterInteractions(() => notesInputRef.current?.focus());
+        return () => task.cancel();
+    }, []);
 
     function handleNotesChange(text: string) {
         notesRef.current = text;
@@ -77,24 +87,27 @@ function FinishSessionModal({meditationSession, children, onCloseClick, onSaveCl
         ? <MediaViewer media={media} startIndex={viewerIndex} onCloseClick={() => setViewerIndex(null)}/>
         : null;
 
-    return <Modal onCloseClick={handleClose} className={styles.finishSessionModal} windowClassName={styles.finishSessionModalWindow}>
+    // Shrink the window so its bottom edge (and the Save button) rests just above the keyboard.
+    const windowStyle = [styles.finishSessionModalWindow, keyboardHeight > 0 ? {marginBottom: keyboardHeight} : null];
+
+    return <Modal onCloseClick={handleClose} className={styles.finishSessionModal} windowClassName={windowStyle}>
         <Div className={styles.rowOne}>
             <Text style={styles.durationText} testID="session-duration">{ getFormattedDuration(meditationSession.durationMs)}</Text>
         </Div>
         <Div className={styles.rowTwo}>
             <Text style={styles.notesText}>Notes</Text>
             <TextInput
+                ref={notesInputRef}
                 testID="notes-input"
                 style={styles.notesTextInput}
                 value={notes}
                 onChangeText={handleNotesChange}
                 multiline
-                numberOfLines={4}
                 placeholder={"Notes about your session"}
                 placeholderTextColor={"rgba(255,255,255,0.3)"}
             />
             <Pressable testID="new-media-button" style={({pressed}) => [styles.newMediaButton, pressed && styles.newMediaButtonPressed]} onPress={() => setShowMediaPicker(true)}>
-                <MaterialCommunityIcons name="plus" size={26} color="#ffffff"/>
+                <MaterialCommunityIcons name="paperclip" size={22} color="rgba(255,255,255,0.92)"/>
             </Pressable>
         </Div>
         <MediaThumbnailRow

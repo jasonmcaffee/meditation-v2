@@ -78,5 +78,18 @@ play all media on session items.
 - [x] jest suite: 47/48 pass (1 failure = pre-existing App.test Skia LinearGradient mock, unrelated)
 
 ## Run on device
-- [ ] Build/install on connected iPhone (in progress)
+- [x] Build/install on connected iPhone (launched successfully)
 - [ ] Manual smoke: take/add photo, take/add video, record audio; thumbnails; playback; delete cleanup
+
+---
+
+# Follow-up: UI polish + keyboard
+
+- [x] "+" media button → paperclip icon in frosted-glass circle (dropped flat purple)
+- [x] Session swipe-to-delete background → translucent muted red (rgba 214,76,76,0.28) + subtle border
+- [x] Finish modal grows to fill height; notes input flexes (min 140px) for more typing room
+- [x] Modal resizes above keyboard via useKeyboardHeight() hook (reliable; replaced flaky KeyboardAvoidingView)
+- [x] autoFocus notes on open so keyboard is up immediately on Finish
+- [x] Keyboard-dismiss button (top-right of notes, only while typing) — native InputAccessoryView ignored for multiline TextInput on iOS, so used an in-modal Keyboard.dismiss() button instead
+- [x] Verified in iOS simulator (iPhone 16 Pro) via idb/screenshots: Save clears keyboard, focus-on-open, dismiss works, media picker opens
+- [x] Built + launched on physical iPhone
