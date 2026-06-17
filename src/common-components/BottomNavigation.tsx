@@ -1,42 +1,72 @@
-import React, {PropsWithChildren, useEffect, useState} from 'react';
-import {View, Text, Button, StyleProp, ViewStyle} from "react-native";
-import Div from "./Div";
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-//dharma wheel
-import {faDharmachakra} from "@fortawesome/free-solid-svg-icons/faDharmachakra";
-import {faOm} from "@fortawesome/free-solid-svg-icons/faOm";
-import {faVihara} from "@fortawesome/free-solid-svg-icons/faVihara";
-
-// @ts-ignore
-import * as styles from '../style/common-components/bottom-navigation.scss';
+import React, {useEffect, useState} from 'react';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 import appEventBus from "../services/appEventBus";
 import createUnregisterFunction from "../react-utils/createUnregisterFunction";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-type Props = PropsWithChildren<{
-    className?: StyleProp<ViewStyle>,
-    onClick?: ()=> void,
-}>;
+const TIMER_TAB    = 'Timer';
+const SESSIONS_TAB = 'Sessions';
 
-function BottomNavigation({className}: Props){
+/**
+ * Bottom navigation bar matching the design exactly:
+ * border-top, space-around icons, padding 14/64/24.
+ * No floating pill — plain bar at the bottom.
+ */
+function BottomNavigation() {
     const [currentPage, setCurrentPage] = useState(appEventBus.navigation.goToPage().get());
+
     useEffect(() => {
         return createUnregisterFunction(appEventBus.navigation.goToPage().on(setCurrentPage));
     }, []);
 
-    function onClickGoToPage(page: string){
+    function goTo(page: string) {
         appEventBus.hapticFeedback.light().set(true);
         appEventBus.navigation.goToPage().set(page);
     }
+
+    const timerActive    = currentPage === TIMER_TAB;
+    const sessionsActive = currentPage === SESSIONS_TAB;
+    const activeColor    = 'rgba(255,255,255,0.90)';
+    const inactiveColor  = 'rgba(255,255,255,0.35)';
+
     return (
-        <Div className={[styles.bottomNavigation, className]}>
-            <Div testID="timer-tab" className={currentPage == "Timer" ? styles.navigationItemActive : styles.navigationItem}  onClick={()=> onClickGoToPage('Timer')}>
-                <FontAwesomeIcon style={currentPage == "Timer" ? styles.navigationIconActive: styles.navigationIcon} icon={faOm} size={30}/>
-            </Div>
-            <Div testID="sessions-tab" className={currentPage == "Sessions" ? styles.navigationItemActive : styles.navigationItem} onClick={()=> onClickGoToPage('Sessions')}>
-                <FontAwesomeIcon style={currentPage == "Sessions" ? styles.navigationIconActive : styles.navigationIcon} icon={faVihara} size={30}/>
-            </Div>
-        </Div>
+        <View style={styles.bar}>
+            <Pressable testID="timer-tab" onPress={() => goTo(TIMER_TAB)} style={styles.tab}>
+                <Text style={[styles.omText, {color: timerActive ? activeColor : inactiveColor}]}>ॐ</Text>
+            </Pressable>
+            <Pressable testID="sessions-tab" onPress={() => goTo(SESSIONS_TAB)} style={styles.tab}>
+                <MaterialCommunityIcons
+                    name="home-outline"
+                    size={24}
+                    color={sessionsActive ? activeColor : inactiveColor}
+                />
+            </Pressable>
+        </View>
     );
 }
+
+const styles = StyleSheet.create({
+    bar: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        paddingTop: 14,
+        paddingBottom: 24,
+        paddingHorizontal: 64,
+        borderTopWidth: 1,
+        borderTopColor: 'rgba(255,255,255,0.06)',
+        marginTop: 14,
+    },
+    tab: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 8,
+    },
+    omText: {
+        fontSize: 24,
+        lineHeight: 28,
+    },
+});
+
 const MemoizedBottomNavigation = React.memo(BottomNavigation);
 export default MemoizedBottomNavigation;

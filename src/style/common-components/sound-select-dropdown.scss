@@ -5,64 +5,62 @@
   align-self: center;
   width: 50%;
 }
+
 .dropDownStyle{
   display: flex;
   flex: 1;
-  background-color: rgb(37, 37, 37);
-  border-radius: 10px;
+  background-color: #141620;
+  border-radius: 12px;
+  border-width: 1px;
+  border-color: $glassBorder;
   width: 70%;
 }
 
 .dropDownChildRow{
   display: flex;
   flex-direction: row;
-  align-items: center; //center the play button vertically
+  align-items: center;
   height: 70px;
+  border-bottom-width: 1px;
+  border-bottom-color: $glassBorder;
 }
 
 .buttonStyle{
   display: flex;
-  background-color: rgb(62, 62, 62); // $buttonBackgroundColor;
+  background-color: $glassCard;
+  border-width: 1px;
+  border-color: $glassBorder;
   width: 100%;
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 0px;
   height: 40px;
   justify-content: center;
-  justify-self: center;
-  justify-items: center;
   align-self: center;
   align-items: center;
-  align-content: center;
-
 }
+
 .buttonTextStyle{
   display: flex;
   @extend %font;
-  color: white;
-  word-break: break-word;
+  color: $textPrimary;
+  font-size: 15px;
 }
 
-
-
 .playButton{
-  //background-color: white;
-  border: none;
+  background-color: transparent;
+  border-width: 0;
   border-radius: 50px;
   margin: 10px;
-  //margin-left: 5px;
-  //margin-right: 5px;
-  //margin-top: 5px;
-  //margin-bottom: 5px;
 }
 
 .playButtonIcon{
-  color: black;
+  color: $accentCyan;
 }
 
 .dropDownChildRowText{
   @extend %font;
-  font-size: 20px;
-  color: white;
+  font-size: 17px;
+  color: $textPrimary;
   text-align: left;
   flex: 1;
 }

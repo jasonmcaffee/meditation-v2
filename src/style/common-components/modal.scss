@@ -2,10 +2,7 @@
 
 .modal{
   background-color: $modalBackgroundColor;
-  //background-color: rgba(37, 37, 37, 0.7);
-  //backdrop-filter: blur(50px) brightness(50%);
   display: flex;
-  //justify-content: center; //vertical
   align-items: center;
   position: absolute;
   padding-top: 30px;
@@ -14,36 +11,27 @@
   z-index: 1000;
 }
 
-
 .modalWindow{
-  //background-color: $modalWindowBackgroundColor;
-  background-color: rgb(247, 245, 248);
+  background-color: $modalWindowBackgroundColor;
   width: 95%;
   margin-top: 20px;
-  border-radius: 15px;
-  padding: 10px;
+  border-radius: 20px;
+  border-width: 1px;
+  border-color: $glassBorder;
+  padding: 16px;
 }
 
 .modalCloseButton{
   position: absolute;
-  right: 0;
+  right: 8px;
+  top: 8px;
   background-color: transparent;
-  border: 0px solid transparent;
+  border-width: 0;
   z-index: 100;
 }
 
 .modalCloseButtonIcon{
-  color: rgba(37,37,37,0.8);// $modalCloseButtonIconColor;
-  //background-color: red;
+  color: $textPrimary;
   position: absolute;
   top: 3px;
 }
-
-//.blurView{
-//  position: absolute;
-//  left: 0;
-//  top:0;
-//  height: 100%;
-//  width: 100%;
-//  z-index: 11;
-//}

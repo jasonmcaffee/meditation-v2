@@ -1,53 +1,61 @@
 import React, {PropsWithChildren, ReactNode, useEffect, useRef, useState} from "react";
-import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
-// @ts-ignore
-import * as styles from "../style/common-components/page.scss";
-import Div from "./Div";
-import {SafeAreaView, ScrollView, Text, Animated, StyleProp, ViewStyle} from "react-native";
+import {SafeAreaView, Animated, StyleSheet} from "react-native";
 import BottomNavigation from "./BottomNavigation";
 import appEventBus from "../services/appEventBus";
 import createUnregisterFunction from "../react-utils/createUnregisterFunction";
 
 type Props = PropsWithChildren<{
-    pageName: string,
-    className?: StyleProp<ViewStyle>,
-    modal?: ReactNode
+    pageName: string;
+    modal?: ReactNode;
 }>;
 
-function Page({pageName, children, className = null, modal}: Props){
-    const bottom = StaticSafeAreaInsets?.safeAreaInsetsBottom ?? 10;
-    const bottomPosition = {bottom};
-    const bottomStyle = {...styles.bottomNavigation, ...bottomPosition};
+/**
+ * Page wrapper with fade animation and in-flow bottom navigation bar.
+ */
+function Page({pageName, children, modal}: Props) {
     const [currentPageName, setCurrentPageName] = useState(appEventBus.navigation.goToPage().get());
-    const style = currentPageName == pageName ? {} : {display: 'none'};
     const fadeAnim = useRef(new Animated.Value(0)).current;
-    const pageStyle = {...styles.page, ...style};
-    const pageContentStyle = {...styles.pageContent, opacity: fadeAnim};
-    const animationDuration = 500;
+    const isVisible = currentPageName === pageName;
 
-    useEffect(()=>{
-        if(currentPageName == pageName){ //needed so that the animation actually fires the first time you go to the page.
-            Animated.timing(fadeAnim, {useNativeDriver: true, toValue: 1, duration: animationDuration}).start();
+    useEffect(() => {
+        if (isVisible) {
+            Animated.timing(fadeAnim, {useNativeDriver: true, toValue: 1, duration: 400}).start();
         }
-        //animate fading the page into view.
-        return createUnregisterFunction(appEventBus.navigation.goToPage().on(newPageName => {
-            setCurrentPageName(newPageName);
-            // console.log(`starting animation this page: ${pageName} currentPageName ${newPageName} `, fadeAnim);
-            const toValue = newPageName == pageName ? 1 : 0;
-            const duration = newPageName == pageName ? animationDuration : 0;
-            Animated.timing(fadeAnim, {useNativeDriver: true, toValue, duration}).start();
+        return createUnregisterFunction(appEventBus.navigation.goToPage().on(newPage => {
+            setCurrentPageName(newPage);
+            Animated.timing(fadeAnim, {
+                useNativeDriver: true,
+                toValue: newPage === pageName ? 1 : 0,
+                duration: newPage === pageName ? 400 : 0,
+            }).start();
         }));
-
     }, [fadeAnim]);
 
-    return <SafeAreaView style={pageStyle}>
-        {modal}
-        <Animated.View style={pageContentStyle}>
-            {children}
-        </Animated.View>
-        <Div className={styles.bottomNavigationSpace}/>
-        <BottomNavigation className={bottomStyle}/>
-    </SafeAreaView>
+    return (
+        <SafeAreaView style={[styles.page, !isVisible && styles.hidden]}>
+            {modal}
+            <Animated.View style={[styles.content, {opacity: fadeAnim}]}>
+                {children}
+            </Animated.View>
+            <BottomNavigation/>
+        </SafeAreaView>
+    );
 }
+
+const styles = StyleSheet.create({
+    page: {
+        position: 'absolute',
+        zIndex: 1,
+        height: '100%',
+        width: '100%',
+        backgroundColor: '#0d0e16',
+    },
+    hidden: {
+        display: 'none',
+    },
+    content: {
+        flex: 1,
+    },
+});
 
 export default Page;

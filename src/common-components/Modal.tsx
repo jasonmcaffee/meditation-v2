@@ -1,10 +1,10 @@
-import React, {PropsWithChildren} from "react";
+import React, {PropsWithChildren, ReactNode} from "react";
 // @ts-ignore
 import * as styles from "../style/common-components/modal.scss";
 import Div from "../common-components/Div";
-import {faClose} from "@fortawesome/free-solid-svg-icons/faClose";
-import IconButton from "./IconButton";
 import {StyleProp, useWindowDimensions, ViewStyle} from "react-native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import appEventBus from "../services/appEventBus";
 
 type Props = PropsWithChildren<{
     className?: StyleProp<ViewStyle>,
@@ -13,14 +13,26 @@ type Props = PropsWithChildren<{
     showCloseButton?: boolean,
 }>;
 
+/**
+ * Dark glassmorphic modal overlay. Renders children inside a rounded dark panel with optional close button.
+ */
 function Modal({children, className = null, windowClassName = null, onCloseClick, showCloseButton = true}: Props){
-    //the css approach doesn't work well, so we need to get the device's height and width programmatically.
     const screenHeight = useWindowDimensions().height;
     const screenWidth = useWindowDimensions().width;
     const sizeStyle = {height: screenHeight, width: screenWidth};
     const style = [styles.modal, sizeStyle, className];
 
-    const closeButton = showCloseButton ? <IconButton icon={faClose} onClick={onCloseClick} className={styles.modalCloseButton} iconClassName={styles.modalCloseButtonIcon} size={35}/> : null;
+    function handleClosePress() {
+        appEventBus.hapticFeedback.light().set(true);
+        onCloseClick && onCloseClick();
+    }
+
+    const closeButton = showCloseButton
+        ? <Div className={styles.modalCloseButton} onClick={handleClosePress}>
+            <MaterialCommunityIcons name="close" size={24} color="#ffffff"/>
+          </Div>
+        : null;
+
     return <Div className={style} onClick={onCloseClick} >
         <Div className={[styles.modalWindow, windowClassName]} onClick={() => {}}>
             {closeButton}

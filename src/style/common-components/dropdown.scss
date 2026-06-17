@@ -1,44 +1,47 @@
 @import "./src/style/common";
+
+// Alarm pill: "padding: 10px 20px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.024)"
 .buttonStyle{
   display: flex;
-  //background-color: rgb(62, 62, 62); // $buttonBackgroundColor;
-  background-color: rgba(62, 62, 62, 0.5); // $buttonBackgroundColor;
-  width: 120px;
-  border-radius: 10px;
-  padding: 0px;
-  height: 40px;
+  background-color: rgba(255, 255, 255, 0.024);
+  border-width: 1px;
+  border-color: rgba(255, 255, 255, 0.10);
+  border-radius: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  height: 44px;
   justify-content: center;
-  justify-self: center;
-  justify-items: center;
   align-self: center;
   align-items: center;
-  align-content: center;
+  min-width: 80px;
 }
+
 .buttonTextStyle{
   display: flex;
-  //flex: 1;
-  //height: 100%;
-  //width: 100%;
-  //padding-top: 3px;
   @extend %font;
-  color: white;
-  //background-color: $buttonBackgroundColor;
-  //width: 50px;
+  color: rgb(238, 240, 244);
+  font-size: 15px;
+  font-weight: 400;
 }
+
 .dropDownStyle{
-  //background-color: $buttonBackgroundColor;
-  background-color: rgb(37, 37, 37);
-  border-radius: 10px;
+  background-color: #141620;
+  border-radius: 12px;
+  border-width: 1px;
+  border-color: $glassBorder;
 }
 
 .dropDownChildRow{
   display: flex;
-  //background-color: red;
+  border-bottom-width: 1px;
+  border-bottom-color: $glassBorder;
 }
 
 .dropDownChildRowText{
   @extend %font;
-  font-size: 20px;
-  color: white;
+  font-size: 16px;
+  color: $textPrimary;
   text-align: center;
 }

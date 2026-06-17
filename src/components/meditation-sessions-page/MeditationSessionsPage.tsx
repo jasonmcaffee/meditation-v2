@@ -1,5 +1,5 @@
-import React, {Component, useEffect, useState} from 'react';
-import {FlatList, SafeAreaView, ScrollView, Text, TextInput, Animated} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {FlatList} from 'react-native';
 import Div from "../../common-components/Div";
 // @ts-ignore
 import * as styles from '../../style/components/meditation-page/meditation-sessions-page.scss';
@@ -9,17 +9,20 @@ import Page from "../../common-components/Page";
 import MeditationSession from "./MeditationSession";
 import appEventBus from "../../services/appEventBus";
 
+/**
+ * Page listing all saved meditation sessions, refreshing whenever the repository changes.
+ */
 function MeditationSessionsPage(){
     const [meditationSessions, setMeditationSessions] = useState([] as IMeditationSession[]);
+
     useEffect(()=>{
         refreshMeditationSessions();
 
-        //refresh when any repo changes occur.
         const unregister2 = appEventBus.meditationSessionRepository.meditationSessionsChanged().on(sessions=>{
             console.log(`meditation sessions changed: `, sessions);
             setMeditationSessions([...sessions]);
-        })
-        return ()=>{  unregister2(); }
+        });
+        return () => { unregister2(); };
     },[]);
 
     const onDeleteClicked = async (i: IMeditationSession) => {
@@ -29,22 +32,20 @@ function MeditationSessionsPage(){
     const refreshMeditationSessions = async () => {
         console.log(`refresh meditation sessions`);
         const sessions = await meditationSession.getMeditationSessions();
-        setMeditationSessions([...sessions]); //must clone array so flatlist gets updated after delete.
+        setMeditationSessions([...sessions]);
     };
 
     return (
         <Page pageName={'Sessions'}>
-            <Div>
-                <FlatList onEndReachedThreshold={.5} data={meditationSessions} renderItem={i => { return createSessionEl(i.item, onDeleteClicked)}} keyExtractor={(i) => i.id}/>
-            </Div>
+            <FlatList
+                contentContainerStyle={styles.listContent}
+                onEndReachedThreshold={0.5}
+                data={meditationSessions}
+                renderItem={i => <MeditationSession key={i.item.id} meditationSession={i.item} onDeleteClick={onDeleteClicked}/>}
+                keyExtractor={(i) => i.id}
+            />
         </Page>
     );
-};
-
-function createSessionEl(meditationSession: IMeditationSession, onDelete: (i: IMeditationSession)=> Promise<void>){
-    return <MeditationSession key={meditationSession.id} meditationSession={meditationSession} onDeleteClick={onDelete}/>
 }
 
 export default MeditationSessionsPage;
-
-

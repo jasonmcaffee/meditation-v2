@@ -13,13 +13,19 @@ type Props = PropsWithChildren<{
     testID?: string,
 }>;
 
+/**
+ * Primary action button with accent color background and haptic feedback.
+ * Use style2 for the secondary (cyan) variant.
+ */
 function Button({children, className = null, onClick, text, style2, testID}: Props){
-    const style = [ style2 ? styles.buttonStyle2 : styles.button, className];
-    const textEl = text == null ? null : <Text style={styles.buttonText}>{text}</Text>
+    const style = [style2 ? styles.buttonStyle2 : styles.button, className];
+    const textEl = text == null ? null : <Text style={styles.buttonText}>{text}</Text>;
+
     function hapticOnClick(){
         appEventBus.hapticFeedback.heavy().set(true);
         onClick && onClick();
     }
+
     return <Div className={style} onClick={hapticOnClick} testID={testID}>{textEl}{children}</Div>;
 }
 

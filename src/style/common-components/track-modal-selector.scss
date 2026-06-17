@@ -9,35 +9,34 @@
   @extend .modalSelectorText;
 }
 
-//background of modal
+// background of modal
 .trackModal{
   @extend .modal;
 }
 
-.trackModalWindow{
-  @extend .modalWindow;
+.modalWindow{
+  background-color: $modalWindowBackgroundColor;
 }
 
 .trackOptionRowWrapper{
   @extend .optionRowWrapper;
+  border-bottom-width: 1px;
+  border-bottom-color: $glassBorder;
 }
 
 .trackDefaultOptionRow{
-  //@extend .defaultOptionRow;
-  border-bottom: 1px solid white;
-  //redundant but needed
-  //border-bottom-color: white;
-  //border-bottom-width: 1px;
-  //margin-bottom: 10px;
+  padding-top: 6px;
+  padding-bottom: 10px;
 }
 
 .trackLabelText{
   @extend .defaultOptionRowText;
-  //font-size: 22px;
-  color: $iconButtonColor;
+  color: $accentCyan;
+  font-size: 17px;
 }
 
 .trackDescriptionText{
   @extend .defaultOptionRowText;
-  font-size: 15px;
+  font-size: 13px;
+  color: $textSecondary;
 }

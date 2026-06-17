@@ -1,20 +1,25 @@
 @import "./src/style/common";
 
 .button{
-  background-color: rgb(228, 228, 229 );// $buttonBackgroundColor;
+  background-color: $accentBlue;
   display: flex;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid $buttonBorderColor;
-  align-items: center;//horizontally center
+  padding: 14px 28px;
+  border-radius: 30px;
+  border-width: 1px;
+  border-color: rgba(58, 111, 216, 0.5);
+  align-items: center;
+  justify-content: center;
 }
 
 .buttonStyle2{
   @extend .button;
-  //background-color: rgb(229, 242, 222 );
-  //border: 1px solid rgb(236, 241, 233  );
+  background-color: $accentCyan;
+  border-color: rgba(41, 182, 216, 0.5);
 }
+
 .buttonText{
   @extend %font;
-  font-size: 20px;
+  font-size: 18px;
+  color: $textPrimary;
+  font-weight: 600;
 }

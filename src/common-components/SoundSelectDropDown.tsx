@@ -4,8 +4,6 @@ import {Pressable, StyleProp, ViewStyle, View, Text} from "react-native";
 import * as styles from '../style/common-components/sound-select-dropdown.scss';
 import {ISoundOption, soundOptionsArray} from "../config/soundFiles";
 import SelectDropdown from "react-native-select-dropdown";
-import {faPlay} from "@fortawesome/free-solid-svg-icons/faPlay";
-import {faStop} from "@fortawesome/free-solid-svg-icons/faStop";
 import IconButton from "./IconButton";
 import audioPlayer from "../services/audioPlayer";
 
@@ -54,9 +52,9 @@ function SoundSelectDropDown({currentValue, options, onOptionSelected}: Props) {
 }
 
 function SoundOptionEl(soundOption: ISoundOption, onPlayStopClick: (option: ISoundOption)=> void, selectOptionSamplePlaying?: ISoundOption){
-    const icon = soundOption == selectOptionSamplePlaying ? faStop : faPlay;
+    const iconName = soundOption === selectOptionSamplePlaying ? 'stop' : 'play';
     return <View style={styles.dropDownChildRow}>
-        <IconButton icon={icon} className={styles.playButton} iconClassName={styles.playButtonIcon} onClick={() => onPlayStopClick(soundOption)}/>
+        <IconButton name={iconName} className={styles.playButton} color="#29b6d8" onClick={() => onPlayStopClick(soundOption)}/>
         <Text style={styles.dropDownChildRowText}>{soundOption.label}</Text>
     </View>
 }

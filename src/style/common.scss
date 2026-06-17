@@ -3,17 +3,41 @@
   font-family: Montserrat;
 }
 
-$buttonBackgroundColor: rgb(228, 228, 229 );
-$buttonBorderColor: grey;
+// Background
+$bgColor: #0e1016;
 
-$iconButtonColor: rgb(212, 68, 64);
-$iconButtonBackgroundColor: rgb(173, 172, 172);
-$iconButtonBorderColor: rgb(134, 134, 134);
+// Accent colors
+$accentPink: #d64c8c;
+$accentBlue: #3a6fd8;
+$accentCyan: #29b6d8;
+$accentPurple: #7c5cd0;
 
-$navigationIconBackgroundColor: rgb(42, 42, 42);
-$navigationIconBackgroundColorActive: rgb(37, 37, 37);
-$navigationIconColor: rgb(209, 209, 210);
+// Text
+$textPrimary: #ffffff;
+$textSecondary: rgba(255, 255, 255, 0.55);
 
-$modalBackgroundColor: rgba(0,0,0,.7);
-$modalWindowBackgroundColor: white;
-$modalCloseButtonIconColor: blue;
+// Glass card / borders
+$glassCard: rgba(255, 255, 255, 0.06);
+$glassBorder: rgba(255, 255, 255, 0.1);
+
+// Navigation
+$navBg: rgba(14, 16, 22, 0.92);
+$navigationIconColor: rgba(255, 255, 255, 0.4);
+$navigationIconColorActive: $accentCyan;
+
+// Modal
+$modalBackgroundColor: rgba(0, 0, 0, 0.85);
+$modalWindowBackgroundColor: rgba(20, 22, 32, 0.97);
+
+// Buttons (legacy, kept for compatibility)
+$buttonBackgroundColor: $accentBlue;
+$buttonBorderColor: rgba(255, 255, 255, 0.15);
+
+$iconButtonColor: $textPrimary;
+$iconButtonBackgroundColor: rgba(255, 255, 255, 0.08);
+$iconButtonBorderColor: $glassBorder;
+
+$navigationIconBackgroundColor: rgba(255, 255, 255, 0.06);
+$navigationIconBackgroundColorActive: rgba(255, 255, 255, 0.12);
+
+$modalCloseButtonIconColor: $textPrimary;

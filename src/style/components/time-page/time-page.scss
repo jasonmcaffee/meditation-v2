@@ -1,115 +1,166 @@
 @import "./src/style/common";
 
-//https://blog.logrocket.com/sass-react-native-guide/
 .timer{
   display: flex;
-  padding: 5px;
+  flex: 1;
   position: relative;
 }
 
-.rowOne{
+// Alarm controls pill - anchored at top
+.alarmControlsContainer{
   display: flex;
-  //flex: 1;
-  height: 60%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-top: 12px;
+  padding-bottom: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
+  z-index: 10;
 }
 
-.rowTwo{
+// Fills space between alarm and bottom controls
+.timerRingsContainer{
   display: flex;
-  //flex: 1;
-  height: 40%;
-  justify-content: flex-end;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+// Bottom section: track selector + play/finish
+.bottomControlsContainer{
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 16px;
+  gap: 12px;
+}
+
+.controlButtonsRow{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.bellIconButton{
+  background-color: transparent;
+  border-width: 0;
+  margin-right: 4px;
+  margin-left: 4px;
+}
+
+.bellIconButtonIcon{
+  color: $accentCyan;
+}
+
+.bellIconButtonIconDisabled{
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.gearIconButton{
+  background-color: transparent;
+  border-width: 0;
+  margin-right: 4px;
+  margin-left: 4px;
+}
+
+.gearIconButtonIcon{
+  color: $textSecondary;
+}
+
+.hours{
+  margin-right: 8px;
+}
+
+// Large play/pause button
+.playPauseButton{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 36px;
+  background-color: $accentCyan;
+  border-width: 0;
+}
+
+.playPauseButtonIcon{
+  color: $bgColor;
+}
+
+// Finish button
+.finishButton{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  border-radius: 26px;
+  padding-left: 32px;
+  padding-right: 32px;
+  border-width: 1px;
+  border-color: $glassBorder;
+  background-color: $glassCard;
+}
+
+.finishButtonText{
+  @extend %font;
+  font-size: 17px;
+  color: $textPrimary;
+  font-weight: 500;
+}
+
+// Keep for backward compat during refactor
+.timerButton{
+  @extend .playPauseButton;
+}
+
+.timerButtonIcon{
+  color: $bgColor;
+}
+
+.timerButtons{
+  @extend .controlButtonsRow;
+}
+
+.timerButtonsColumn{
+  display: flex;
 }
 
 .hoursAndMinutes{
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  justify-self: center;
-  justify-items: center;
-  align-self: center;
   align-items: center;
-  align-content: center;
-  margin-bottom: 20px;
 }
 
-
-.bellIconButton{
-  background-color: transparent;
-  border: none;
-  margin-right: 5px;
-  margin-left: 5px;
-}
-.bellIconButtonIcon{
-  color: white;
-}
-.gearIconButtonIcon{
-  color: white;
-  display: none;
-  visibility: hidden;
+.rowOne{
+  display: flex;
 }
 
-.bellIconButtonIconDisabled{
-  @extend .bellIconButtonIcon;
-  color: rgb(102, 102, 102);
-}
-
-.hours{
-  margin-right: 10px;
+.rowTwo{
+  display: flex;
 }
 
 .timerTime{
   display: flex;
-  align-items: center; //horizontal align content
-  justify-content: center;//vertical align content
-  align-self: center; //horizontally align self
-  padding-left: 10px;
-  padding-right: 10px;
-  font-size: 50px;
-  border: 2px solid white;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
 }
 
 .timeTextCharContainer{
   display: flex;
   flex-direction: row;
-  width: 100%;
   text-align: center;
   justify-content: center;
 }
 
 .timeTextChar{
   @extend %font;
-  font-size: 55px;
-  color: white;
-  width: 35px;
+  font-size: 48px;
+  color: $textPrimary;
+  width: 32px;
   text-align: center;
 }
-
-.timerButtons{
-  display: flex;
-  flex-direction: row;
-  padding: 25px;
-}
-
-.timerButtonsColumn{
-  display: flex;
-  flex: 1;
-}
-
-.timerButton{
-  display: flex;
-  //flex: 1;
-  justify-content: center;//vertical
-  //align-items: center;
-  //align-content: center;
-  align-self: center;
-  height: 100px;
-  width: 100px;
-  //margin: 5px;
-  //padding: 10px;
-  border-radius: 50px;
-}
-
-.timerButtonIcon{
-  color: black;
-}
-

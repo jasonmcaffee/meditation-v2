@@ -1,78 +1,81 @@
 @import "./src/style/common";
 
-$meditationSessionBackgroundColor:  rgb(67, 67, 67);
 .meditationSession{
-  background-color: $meditationSessionBackgroundColor;
+  background-color: $glassCard;
+  border-width: 1px;
+  border-color: $glassBorder;
   margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 14px;
+  border-radius: 16px;
 }
 
 .rowOne{
   display: flex;
   flex-direction: row;
-  align-items: center; //vertical align
+  align-items: center;
 }
-.rowTwo{
-  padding-bottom: 5px;
-  padding-top: 5px;
-  display: flex;
-  //align-self: center;
-  margin-left: -6px;
-  //background-color: red;
-}
-.rowThree{
 
+.rowTwo{
+  padding-bottom: 4px;
+  padding-top: 4px;
+  display: flex;
+  margin-left: -6px;
 }
+
+.rowThree{
+  padding-top: 4px;
+}
+
 .text{
   @extend %font;
-  color: white;
-
+  color: $textPrimary;
 }
 
 .date{
   @extend .text;
   flex: 2;
-  //
+  color: $textSecondary;
+  font-size: 14px;
 }
 
 .duration{
   @extend .text;
-  //
+  color: $accentCyan;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .notes{
   @extend .text;
+  color: $textSecondary;
+  font-size: 14px;
 }
 
 .rightSwipeContainer{
-  background-color: transparent;
-  display: flex; //ensures we only slide left by a certain amount.
+  background-color: #8B1A1A;
+  display: flex;
   margin-bottom: 10px;
-  border-radius: 5px;
-  //width: 100px;
+  border-radius: 16px;
+  align-items: center;
+  justify-content: center;
 }
 
 .animatedTextDeleteButtonContainer{
-  //background-color: $meditationSessionBackgroundColor;
   display: flex;
-  background-color: transparent;
   flex: 1;
 }
 
 .deleteButton{
   display: flex;
-  //margin-left: 10px;
   background-color: transparent;
-  border: none;
-  flex: 1; //vertically align
-  align-items: flex-end; //push icon to far right
-  justify-content: center; //vertically align delete button
+  border-width: 0;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
   width: 70px;
 }
 
 .deleteButtonIcon{
   display: flex;
-  //background-color: red;
+  color: $textPrimary;
 }
-

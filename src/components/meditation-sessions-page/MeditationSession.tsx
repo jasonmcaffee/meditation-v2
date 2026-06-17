@@ -1,4 +1,4 @@
-import React, {Component, PropsWithChildren} from "react";
+import React, {PropsWithChildren} from "react";
 //@ts-ignore
 import StarRating from 'react-native-star-rating-widget';
 // @ts-ignore
@@ -6,9 +6,8 @@ import * as styles from "../../style/components/meditation-page/meditation-sessi
 import Div from "../../common-components/Div";
 import IMeditationSession, {getFormattedDate, getFormattedDuration} from "../../models/IMeditationSession";
 import {Animated, Text} from "react-native";
-import IconButton from "../../common-components/IconButton";
-import {faTrash} from "@fortawesome/free-solid-svg-icons/faTrash";
 import {RectButton, Swipeable} from "react-native-gesture-handler";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import AnimatedInterpolation = Animated.AnimatedInterpolation;
 
 type Props = PropsWithChildren<{
@@ -16,19 +15,25 @@ type Props = PropsWithChildren<{
     meditationSession: IMeditationSession,
 }>;
 
+/**
+ * Glass card for a single meditation session. Supports swipe-to-delete revealing a red trash action.
+ */
 function MeditationSession({children, onDeleteClick, meditationSession}: Props){
-    // const starColor = "rgb(37,37,37)";
-    const starColor = "rgb(174, 174, 174 )";
-    const emptyColor = "rgb(174, 174, 174 )";
-
-    return <Swipeable renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, ()=>{onDeleteClick(meditationSession)})}>
+    return <Swipeable renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, () => onDeleteClick(meditationSession))}>
         <Div key={meditationSession.id} testID={`session-item-${meditationSession.id}`} className={styles.meditationSession}>
             <Div className={styles.rowOne}>
                 <Text style={styles.date}>{getFormattedDate(meditationSession.dateMs)}</Text>
-                <Text style={styles.duration}>{ getFormattedDuration(meditationSession.durationMs)}</Text>
+                <Text style={styles.duration}>{getFormattedDuration(meditationSession.durationMs)}</Text>
             </Div>
             <Div className={styles.rowTwo}>
-                <StarRating rating={meditationSession.rating} color={starColor} emptyColor={emptyColor} starSize={20} onChange={()=> null} animationConfig={{scale: 1}}/>
+                <StarRating
+                    rating={meditationSession.rating}
+                    color="#d64c8c"
+                    emptyColor="rgba(255,255,255,0.15)"
+                    starSize={18}
+                    onChange={() => null}
+                    animationConfig={{scale: 1}}
+                />
             </Div>
             {meditationSession.notes &&
             <Div className={styles.rowThree}>
@@ -40,22 +45,15 @@ function MeditationSession({children, onDeleteClick, meditationSession}: Props){
 }
 
 function renderRightActions(progress: AnimatedInterpolation<any>, dragX: AnimatedInterpolation<any>, onDeleteClick: ()=>void){
-    const trans = dragX.interpolate({
-        inputRange: [0, 50, 50, 101],
-        outputRange: [-5, 0, 0, 1],
-    });
-    const animatedStyle = [
-        styles.animatedTextDeleteButtonContainer,
-        // { transform: [{ translateX: trans }], },
-    ]
     return (
         <Div className={styles.rightSwipeContainer}>
-            <Animated.Text style={animatedStyle}>
-                <IconButton className={styles.deleteButton} iconClassName={styles.deleteButtonIcon} icon={faTrash} size={30} onClick={onDeleteClick}/>
-            </Animated.Text>
+            <Animated.View style={[styles.animatedTextDeleteButtonContainer]}>
+                <Div className={styles.deleteButton} onClick={onDeleteClick}>
+                    <MaterialCommunityIcons name="trash-can-outline" size={28} color="#ffffff"/>
+                </Div>
+            </Animated.View>
         </Div>
     );
-};
-
+}
 
 export default MeditationSession;
