@@ -4,12 +4,8 @@
 
 }
 
-// Fill (nearly) the whole screen height so the notes area can be large.
 .finishSessionModalWindow{
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 24px;
+
 }
 
 .row{
@@ -22,11 +18,8 @@
   display: flex;
 }
 
-// Notes row grows to absorb the modal's free vertical space.
 .rowTwo{
   @extend .row;
-  flex: 1;
-  display: flex;
 }
 
 .rowThree{
@@ -66,11 +59,11 @@
 
 .notesTextInput{
   @extend %font;
-  flex: 1;
   background-color: rgba(255, 255, 255, 0.06);
   border-width: 1px;
   border-color: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
+  height: 200px;
   padding: 14px;
   font-size: 16px;
   line-height: 22px;
