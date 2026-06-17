@@ -7,6 +7,13 @@ jest.mock('react-native-fs', () => ({
   stat: jest.fn(() => Promise.resolve({ size: 0 })),
   exists: jest.fn(() => Promise.resolve(false)),
   unlink: jest.fn(() => Promise.resolve()),
+  copyFile: jest.fn(() => Promise.resolve()),
+}));
+
+// Mock react-native-image-picker
+jest.mock('react-native-image-picker', () => ({
+  launchCamera: jest.fn(() => Promise.resolve({ didCancel: true })),
+  launchImageLibrary: jest.fn(() => Promise.resolve({ didCancel: true })),
 }));
 
 // Mock react-native-sound

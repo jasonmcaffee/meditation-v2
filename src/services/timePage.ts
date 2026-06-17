@@ -53,13 +53,14 @@ class TimePage{
         this.pageState!.shouldDisplayFinishSessionModal = true;
     }
 
-    async saveSession(notes: string, rating: number){
+    async saveSession(notes: string, rating: number, photos: string[] = []){
         try {
             const session = this.pageState!.meditationSession;
             if(!session) { return console.warn('[timePage] saveSession: no meditationSession set'); }
-            console.log('[timePage] saveSession called', { notes, rating, sessionId: session.id });
+            console.log('[timePage] saveSession called', { notes, rating, photos, sessionId: session.id });
             session.notes = notes;
             session.rating = rating;
+            session.photos = photos;
             await meditationSessionRepository.saveMeditationSession(session);
             console.log('[timePage] saveSession complete');
             this.pageState!.meditationSession = undefined;

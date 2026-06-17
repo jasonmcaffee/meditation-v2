@@ -1,0 +1,36 @@
+@import "./src/style/common";
+
+.thumbnailRow{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.thumbnailWrapper{
+  position: relative;
+  margin-right: 8px;
+  margin-top: 8px;
+}
+
+.thumbnail{
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  border-width: 1px;
+  border-color: $glassBorder;
+  background-color: $glassCard;
+}
+
+.removeBadge{
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 11px;
+  background-color: rgba(0, 0, 0, 0.75);
+  border-width: 1px;
+  border-color: rgba(255, 255, 255, 0.3);
+  align-items: center;
+  justify-content: center;
+}

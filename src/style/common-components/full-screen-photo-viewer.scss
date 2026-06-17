@@ -1,0 +1,46 @@
+@import "./src/style/common";
+
+.overlay{
+  flex: 1;
+  background-color: rgba(0, 0, 0, 0.96);
+  align-items: center;
+  justify-content: center;
+}
+
+.image{
+  width: 100%;
+  height: 80%;
+}
+
+.closeButton{
+  position: absolute;
+  top: 40px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  z-index: 2100;
+}
+
+.navRow{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.navButton{
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background-color: rgba(255, 255, 255, 0.08);
+  align-items: center;
+  justify-content: center;
+}

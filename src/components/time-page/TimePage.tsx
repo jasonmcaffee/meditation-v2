@@ -25,7 +25,7 @@ function TimePage() {
         ? <FinishSessionModal
               meditationSession={state.meditationSession}
               onCloseClick={() => state.shouldDisplayFinishSessionModal = false}
-              onSaveClick={(notes, rating) => timePage.saveSession(notes, rating)}
+              onSaveClick={(notes, rating, photos) => timePage.saveSession(notes, rating, photos)}
           />
         : null;
     const soundSettingsModal = state.shouldDisplaySoundSettingsModal

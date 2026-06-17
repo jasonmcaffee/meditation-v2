@@ -30,6 +30,29 @@ class FileSystem{
         // console.log(`read file: `, result);
         return result;
     }
+
+    /** Copy a file from one path/uri to another, ensuring the destination dir exists. */
+    async copyFile(sourcePath: string, destPath: string){
+        console.log(`copying file. ${sourcePath} -> ${destPath}`);
+        return RNFS.copyFile(sourcePath, destPath);
+    }
+
+    /** Delete a file, ignoring the case where it does not exist. */
+    async unlink(path: string){
+        try{
+            await RNFS.unlink(path);
+        }catch(e: any){
+            const isNotFound = e?.code === 'ENOENT' ||
+                (e?.message && e.message.toLowerCase().indexOf('no such file or directory') >= 0);
+            if(!isNotFound){ throw e; }
+            console.log(`unlink: file did not exist, ignoring: ${path}`);
+        }
+    }
+
+    /** Whether a file exists at the given path. */
+    async exists(path: string): Promise<boolean>{
+        return RNFS.exists(path);
+    }
 }
 
 const fileSystem = new FileSystem();

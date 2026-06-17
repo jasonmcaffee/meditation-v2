@@ -1,7 +1,22 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import FinishSessionModal from '../src/components/time-page/FinishSessionModal';
 import IMeditationSession from '../src/models/IMeditationSession';
+
+jest.mock('../src/services/photoService', () => ({
+  __esModule: true,
+  default: {
+    capturePhoto: jest.fn(),
+    pickPhoto: jest.fn(),
+    deletePhotos: jest.fn(() => Promise.resolve()),
+  },
+}));
+
+const photoService = require('../src/services/photoService').default;
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 /** Build a minimal IMeditationSession for test purposes. */
 function makeSession(overrides: Partial<IMeditationSession> = {}): IMeditationSession {
@@ -55,7 +70,7 @@ describe('FinishSessionModal', () => {
     fireEvent.press(saveButton);
 
     expect(onSaveClick).toHaveBeenCalledTimes(1);
-    expect(onSaveClick).toHaveBeenCalledWith('Felt very calm today', expect.any(Number));
+    expect(onSaveClick).toHaveBeenCalledWith('Felt very calm today', expect.any(Number), []);
   });
 
   it('calls onSaveClick with empty notes when nothing is typed', () => {
@@ -67,7 +82,7 @@ describe('FinishSessionModal', () => {
 
     fireEvent.press(getByText('Save'));
 
-    expect(onSaveClick).toHaveBeenCalledWith('', expect.any(Number));
+    expect(onSaveClick).toHaveBeenCalledWith('', expect.any(Number), []);
   });
 
   it('calls onCloseClick when the close (X) button is pressed', () => {
@@ -106,5 +121,109 @@ describe('FinishSessionModal', () => {
 
     // onCloseClick should not be called because Modal window now has its own onClick handler
     expect(onCloseClick).not.toHaveBeenCalled();
+  });
+
+  describe('photos', () => {
+    it('shows a thumbnail after capturing a photo with the camera', async () => {
+      photoService.capturePhoto.mockResolvedValue('photo-1.jpg');
+      const { getByTestId } = render(<FinishSessionModal meditationSession={makeSession()} />);
+
+      await act(async () => {
+        fireEvent.press(getByTestId('capture-photo-button'));
+      });
+
+      await waitFor(() => expect(getByTestId('session-thumbnail-0')).toBeTruthy());
+    });
+
+    it('shows a thumbnail after attaching a photo from the gallery', async () => {
+      photoService.pickPhoto.mockResolvedValue('photo-2.jpg');
+      const { getByTestId } = render(<FinishSessionModal meditationSession={makeSession()} />);
+
+      await act(async () => {
+        fireEvent.press(getByTestId('pick-photo-button'));
+      });
+
+      await waitFor(() => expect(getByTestId('session-thumbnail-0')).toBeTruthy());
+    });
+
+    it('passes attached photos to onSaveClick', async () => {
+      photoService.capturePhoto.mockResolvedValue('photo-1.jpg');
+      const onSaveClick = jest.fn();
+      const { getByTestId } = render(
+        <FinishSessionModal meditationSession={makeSession()} onSaveClick={onSaveClick} />
+      );
+
+      await act(async () => {
+        fireEvent.press(getByTestId('capture-photo-button'));
+      });
+      await waitFor(() => expect(getByTestId('session-thumbnail-0')).toBeTruthy());
+
+      fireEvent.press(getByTestId('save-button'));
+
+      expect(onSaveClick).toHaveBeenCalledWith('', expect.any(Number), ['photo-1.jpg']);
+    });
+
+    it('does not add a thumbnail when the picker is cancelled', async () => {
+      photoService.capturePhoto.mockResolvedValue(null);
+      const { getByTestId, queryByTestId } = render(<FinishSessionModal meditationSession={makeSession()} />);
+
+      await act(async () => {
+        fireEvent.press(getByTestId('capture-photo-button'));
+      });
+
+      expect(queryByTestId('session-thumbnail-0')).toBeNull();
+    });
+
+    it('removes a photo and deletes its file when the remove badge is tapped', async () => {
+      photoService.capturePhoto.mockResolvedValue('photo-1.jpg');
+      const { getByTestId, queryByTestId } = render(<FinishSessionModal meditationSession={makeSession()} />);
+
+      await act(async () => {
+        fireEvent.press(getByTestId('capture-photo-button'));
+      });
+      await waitFor(() => expect(getByTestId('session-thumbnail-0')).toBeTruthy());
+
+      await act(async () => {
+        fireEvent.press(getByTestId('session-thumbnail-remove-0'));
+      });
+
+      expect(photoService.deletePhotos).toHaveBeenCalledWith(['photo-1.jpg']);
+      expect(queryByTestId('session-thumbnail-0')).toBeNull();
+    });
+
+    it('deletes unsaved photos when the modal is closed without saving', async () => {
+      photoService.capturePhoto.mockResolvedValue('photo-1.jpg');
+      const onCloseClick = jest.fn();
+      const { getByTestId, getAllByText } = render(
+        <FinishSessionModal meditationSession={makeSession()} onCloseClick={onCloseClick} />
+      );
+
+      await act(async () => {
+        fireEvent.press(getByTestId('capture-photo-button'));
+      });
+      await waitFor(() => expect(getByTestId('session-thumbnail-0')).toBeTruthy());
+
+      // Press the modal close (X) button — rendered as the first MaterialCommunityIcons 'icon'.
+      await act(async () => {
+        fireEvent.press(getAllByText('icon')[0]);
+      });
+
+      expect(photoService.deletePhotos).toHaveBeenCalledWith(['photo-1.jpg']);
+      expect(onCloseClick).toHaveBeenCalledTimes(1);
+    });
+
+    it('does NOT delete photos when the modal is saved', async () => {
+      photoService.capturePhoto.mockResolvedValue('photo-1.jpg');
+      const { getByTestId } = render(<FinishSessionModal meditationSession={makeSession()} onSaveClick={jest.fn()} />);
+
+      await act(async () => {
+        fireEvent.press(getByTestId('capture-photo-button'));
+      });
+      await waitFor(() => expect(getByTestId('session-thumbnail-0')).toBeTruthy());
+
+      fireEvent.press(getByTestId('save-button'));
+
+      expect(photoService.deletePhotos).not.toHaveBeenCalled();
+    });
   });
 });
