@@ -8,7 +8,6 @@ import useKeyboardHeight from "../../hooks/useKeyboardHeight";
 import IMeditationSession, {getFormattedDuration, IMediaItem} from "../../models/IMeditationSession";
 //@ts-ignore
 import StarRating from 'react-native-star-rating-widget';
-import GradientButton from "../../common-components/GradientButton";
 import GradientStar from "../../common-components/GradientStar";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MediaThumbnailRow from "../../common-components/MediaThumbnailRow";
@@ -126,7 +125,9 @@ function FinishSessionModal({meditationSession, children, onCloseClick, onSaveCl
             />
         </Div>
         <Div className={styles.rowFour}>
-            <GradientButton testID="save-button" onClick={handleSave} text={"Save"}/>
+            <Pressable testID="save-button" onPress={handleSave} style={({pressed}) => [styles.saveButton, pressed && styles.saveButtonPressed]}>
+                <Text style={styles.saveButtonText}>Save</Text>
+            </Pressable>
         </Div>
         {mediaPicker}
         {viewer}

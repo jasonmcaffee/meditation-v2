@@ -27,8 +27,7 @@
 
 .title{
   @extend %font;
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 17px;
   color: #ffffff;
 }
 
@@ -73,8 +72,6 @@
 .actionLabel{
   @extend %font;
   font-size: 16px;
-  font-weight: 500;
-  letter-spacing: 0.3px;
   color: rgba(255, 255, 255, 0.92);
 }
 
@@ -145,7 +142,6 @@
 .saveLabel{
   @extend %font;
   font-size: 15px;
-  font-weight: 500;
   color: #ffffff;
 }
 
