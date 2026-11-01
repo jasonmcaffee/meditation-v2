@@ -253,7 +253,12 @@ the quarantine count. Actions:
 | A debug build looks for Metro on the host's port 8081, which is a different service on the development machine, and a Maestro `clearState` wipes the setting that points it elsewhere. | `scripts/bundle-js-in-debug.gradle`: a Gradle init script that bundles the JavaScript into a debuggable build, so the device tests need no Metro |
 | `inillucent/packages/swift/build-xcframework.sh` always built the two macOS slices. | inillucent 3aa2aa10: `INILLUCENT_APPLE_PLATFORMS="ios simulator"` builds only what an iPhone app links |
 | The conversion is shown as an empty Sessions page while it runs. | The Sessions page says "Loading your sessions…" until the first load finishes |
+| `build-xcframework.sh` ran cargo from the caller's directory, so from another checkout rustup chose the caller's default toolchain, which lacked the Apple targets (`can't find crate for core`). | inillucent 11c85cb9 runs cargo from the inillucent root |
+| On iOS a `Pressable` is one accessibility element. The app's `Modal` and the Finish Session modal's rows are pressables, so VoiceOver and UI tests could not reach the controls inside them. | `Div` takes `accessible`; the modal wrappers and layout rows set it to false, and the Data screen uses plain `View`s |
+| The new Data button sat under the Android status bar, so taps sometimes reached the status bar. | The Sessions page header is placed below `StatusBar.currentHeight` on Android |
+| Maestro's iOS driver took just over its default startup wait on a hosted runner. | The workflow waits ten minutes and retries a flow once on that error |
 
 Measured on the Android emulator (x86_64, software GPU), with the JavaScript bundled: 40 sessions
 convert in 2.4 s and 400 in 3.2 s, so most of it is a fixed cost and each session adds about 2 ms.
-Reading 400 sessions for the list takes 55 ms.
+Reading 400 sessions for the list takes 55 ms. On the iOS simulator on a GitHub macOS runner, a
+Release build converted the same 40 sessions in 20 ms.
