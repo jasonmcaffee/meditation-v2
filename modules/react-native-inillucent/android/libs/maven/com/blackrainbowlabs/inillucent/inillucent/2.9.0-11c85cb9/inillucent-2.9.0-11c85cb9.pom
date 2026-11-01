@@ -3,6 +3,6 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.blackrainbowlabs.inillucent</groupId>
   <artifactId>inillucent</artifactId>
-  <version>2.9.0-3aa2aa10</version>
+  <version>2.9.0-11c85cb9</version>
   <packaging>aar</packaging>
 </project>

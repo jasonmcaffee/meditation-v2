@@ -1,0 +1,47 @@
+appId: com.jasonmcaffee.meditation
+---
+# E2E test (task-2445): the Data screen moves the sessions to sessions.txt and back to the inillucent
+# database without losing any. Run after convertedSessions.yaml (40 converted sessions);
+# launchApp WITHOUT clearState.
+
+- launchApp
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "sessions-tab"
+    timeout: 25000
+- tapOn:
+    id: "sessions-tab"
+- waitForAnimationToEnd
+- tapOn:
+    id: "data-button"
+- extendedWaitUntil:
+    visible:
+      id: "data-use-json-button"
+    timeout: 8000
+
+- tapOn:
+    id: "data-use-json-button"
+- extendedWaitUntil:
+    visible:
+      id: "data-storage-mode"
+      text: "sessions.txt (JSON file)"
+    timeout: 15000
+- assertVisible:
+    id: "data-session-count"
+    text: "40"
+- takeScreenshot: data-screen-on-json
+
+- tapOn:
+    id: "data-use-inillucent-button"
+- extendedWaitUntil:
+    visible:
+      id: "data-storage-mode"
+      text: "inillucent database"
+    timeout: 15000
+- assertVisible:
+    id: "data-session-count"
+    text: "40"
+- assertNotVisible:
+    id: "data-error"
+- takeScreenshot: data-screen-back-on-inillucent
