@@ -89,14 +89,26 @@ jobs:
           curl -Ls "https://get.maestro.mobile.dev" | bash
           export PATH="$PATH:$HOME/.maestro/bin"
           export MAESTRO_CLI_NO_ANALYTICS=1
+          # Maestro's iOS driver is an XCTest runner it builds and installs on the first flow. On a
+          # hosted runner that took just over Maestro's default wait, so the wait is ten minutes,
+          # and a flow whose driver still did not start is run once more.
+          export MAESTRO_DRIVER_STARTUP_TIMEOUT=600000
           mkdir -p _agent_output/maestro
           device=$(cat _agent_output/ios-device-udid.txt)
-          maestro --device "$device" test --test-output-dir _agent_output/maestro \
-            e2e/maestro/convertedSessions.yaml
-          maestro --device "$device" test --test-output-dir _agent_output/maestro \
-            e2e/maestro/dataScreenSwitch.yaml
-          maestro --device "$device" test --test-output-dir _agent_output/maestro \
-            e2e/maestro/sessionSurvivesRestart.yaml
+          run_flow() {
+            if maestro --device "$device" test --test-output-dir _agent_output/maestro "$1" | tee _agent_output/maestro/last.txt; then
+              return 0
+            fi
+            if grep -q "driver not ready in time" _agent_output/maestro/last.txt; then
+              maestro --device "$device" test --test-output-dir _agent_output/maestro "$1"
+            else
+              return 1
+            fi
+          }
+          set -o pipefail
+          run_flow e2e/maestro/convertedSessions.yaml
+          run_flow e2e/maestro/dataScreenSwitch.yaml
+          run_flow e2e/maestro/sessionSurvivesRestart.yaml
 
       - name: results
         if: always()

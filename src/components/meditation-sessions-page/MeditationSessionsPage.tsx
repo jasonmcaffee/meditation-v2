@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, FlatList, Text} from 'react-native';
+import {ActivityIndicator, FlatList, Platform, StatusBar, Text} from 'react-native';
 import Div from "../../common-components/Div";
 // @ts-ignore
 import * as styles from '../../style/components/meditation-page/meditation-sessions-page.scss';
@@ -10,6 +10,12 @@ import MeditationSession from "./MeditationSession";
 import appEventBus from "../../services/appEventBus";
 import IconButton from "../../common-components/IconButton";
 import DataModal from "../data-page/DataModal";
+
+/**
+ * On Android the page draws under the status bar, so the Data button is moved below it. On iOS the
+ * page's SafeAreaView already leaves that room.
+ */
+const headerInset = {marginTop: Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) : 0};
 
 /** Opens the Data screen (storage, conversion and backups) as the app's modal. */
 export function showDataModal(){
@@ -49,7 +55,7 @@ function MeditationSessionsPage(){
 
     return (
         <Page pageName={'Sessions'}>
-            <Div className={styles.header}>
+            <Div className={[styles.header, headerInset]} accessible={false}>
                 <IconButton name="database-outline" size={20} onClick={showDataModal} testID="data-button"/>
             </Div>
             {loaded ? null : <Div className={styles.loading} testID="sessions-loading">
