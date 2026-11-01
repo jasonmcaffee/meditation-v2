@@ -5,10 +5,17 @@ type Props = PropsWithChildren<{
     className?: StyleProp<ViewStyle>,
     onClick?: ()=> void,
     testID?: string,
+    accessible?: boolean,
 }>;
 
-function Div({children, className = null, onClick, testID}: Props) {
-    return <Pressable onPress={onClick} style={className} testID={testID}>
+/**
+ * A pressable container. Set accessible={false} on one that wraps other controls: on iOS an accessible
+ * Pressable is a single accessibility element, which hides everything inside it from VoiceOver and
+ * from UI tests.
+ * @param accessible - whether the container is one accessibility element (React Native's default, true)
+ */
+function Div({children, className = null, onClick, testID, accessible}: Props) {
+    return <Pressable onPress={onClick} style={className} testID={testID} accessible={accessible}>
         {children}
     </Pressable>;
 }

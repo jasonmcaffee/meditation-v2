@@ -9,8 +9,8 @@
 # 2. installs the pods and builds the app for the simulator in Release, so the JavaScript is bundled,
 # 3. installs it fresh on the newest iPhone simulator with a 40 session legacy sessions.txt in
 #    Documents, launches it, and checks the conversion (scripts/device-test-ios.mjs),
-# 4. runs the Maestro flows that check the converted sessions on screen, the Data screen, and a
-#    new session surviving a restart.
+# 4. runs the Maestro flows that check the converted sessions on screen, the Data screen, switching
+#    to sessions.txt and back, and a new session surviving a restart.
 #
 # The device test results, the Maestro screenshots and the Podfile.lock pod install wrote are
 # uploaded as the ios-results artifact.
@@ -93,6 +93,8 @@ jobs:
           device=$(cat _agent_output/ios-device-udid.txt)
           maestro --device "$device" test --test-output-dir _agent_output/maestro \
             e2e/maestro/convertedSessions.yaml
+          maestro --device "$device" test --test-output-dir _agent_output/maestro \
+            e2e/maestro/dataScreenSwitch.yaml
           maestro --device "$device" test --test-output-dir _agent_output/maestro \
             e2e/maestro/sessionSurvivesRestart.yaml
 

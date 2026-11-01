@@ -33,8 +33,8 @@ function Modal({children, className = null, windowClassName = null, onCloseClick
           </Div>
         : null;
 
-    return <Div className={style} onClick={onCloseClick} >
-        <Div className={[styles.modalWindow, windowClassName]} onClick={() => {}}>
+    return <Div className={style} onClick={onCloseClick} accessible={false}>
+        <Div className={[styles.modalWindow, windowClassName]} onClick={() => {}} accessible={false}>
             {closeButton}
             {children}
         </Div>

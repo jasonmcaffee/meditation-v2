@@ -24,6 +24,10 @@ function createFakeRnfs() {
   const documents = fs.mkdtempSync(path.join(os.tmpdir(), 'meditation-docs-')).split(path.sep).join('/');
   return {
     DocumentDirectoryPath: documents,
+    /** Removes the documents folder itself, when the tests are done. */
+    __dispose() {
+      fs.rmSync(documents, { recursive: true, force: true });
+    },
     /** Removes everything in the documents folder, for a clean test. */
     __reset() {
       fs.rmSync(documents, { recursive: true, force: true });

@@ -40,7 +40,7 @@ appId: com.jasonmcaffee.meditation
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible:
-      text: "Saved before a restart"
+      text: ".*Saved before a restart.*"
     timeout: 10000
-- assertVisible: "Calm. Breath settled after ten minutes. #40"
+- assertVisible: ".*Calm. Breath settled after ten minutes. #40.*"
 - takeScreenshot: saved-after-restart

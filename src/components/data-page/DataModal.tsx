@@ -1,9 +1,8 @@
 import React from "react";
-import {ActivityIndicator, ScrollView, Text} from "react-native";
+import {ActivityIndicator, ScrollView, Text, View} from "react-native";
 // @ts-ignore
 import * as styles from "../../style/components/data-page/data-modal.scss";
 import Modal from "../../common-components/Modal";
-import Div from "../../common-components/Div";
 import Button from "../../common-components/Button";
 import {StorageStatusState, useStorageStatus} from "../../hooks/useStorageStatus";
 import {StorageReport} from "../../services/storage/storageBootstrap";
@@ -41,10 +40,10 @@ function DataModal({onCloseClick}: Props){
  * @param testID - for the device tests
  */
 function Line({label, value, testID}: {label: string, value: string, testID?: string}){
-    return <Div className={styles.line}>
+    return <View style={styles.line}>
         <Text style={styles.label}>{label}</Text>
         <Text style={styles.value} testID={testID}>{value}</Text>
-    </Div>;
+    </View>;
 }
 
 /**
@@ -54,13 +53,13 @@ function Line({label, value, testID}: {label: string, value: string, testID?: st
 function StatusCard({status}: {status: StorageStatus}){
     const report = status.report;
     const converted = lastConversion(status.log);
-    return <Div className={styles.card}>
+    return <View style={styles.card}>
         <Line label="Stored in" value={report.mode === 'inillucent' ? 'inillucent database' : 'sessions.txt (JSON file)'} testID="data-storage-mode"/>
         {report.engineVersion ? <Line label="Engine" value={`inillucent ${report.engineVersion}`}/> : null}
         <Line label="Sessions" value={String(report.sessionCount)} testID="data-session-count"/>
         <Line label="Converted from sessions.txt" value={converted} testID="data-conversion"/>
         {report.quarantined ? <Line label="Set aside" value={`${report.quarantined} records`}/> : null}
-    </Div>;
+    </View>;
 }
 
 /**
@@ -91,9 +90,9 @@ function Warnings({report}: {report: StorageReport}){
         lines.push(`${report.quarantined} records in sessions.txt were not sessions. They were set aside with their original text, and nothing else was affected.`);
     }
     if(!lines.length){ return null; }
-    return <Div className={styles.warning} testID="data-warning">
+    return <View style={styles.warning} testID="data-warning">
         {lines.map(line => <Text key={line} style={styles.warningText}>{line}</Text>)}
-    </Div>;
+    </View>;
 }
 
 /**
@@ -116,14 +115,14 @@ function SmallButton({text, onClick, testID}: {text: string, onClick: () => void
 function Actions({status, state}: {status: StorageStatus, state: StorageStatusState}){
     const report = status.report;
     const onDatabase = report.mode === 'inillucent';
-    return <Div className={styles.actions}>
+    return <View style={styles.actions}>
         {onDatabase && report.legacyFilePresent ? <SmallButton text="Retry conversion" onClick={state.retry} testID="data-retry-button"/> : null}
         {report.legacyFilePresent ? <SmallButton text="Share sessions.txt" onClick={state.shareLegacyFile} testID="data-share-legacy-button"/> : null}
         <SmallButton text="Export sessions" onClick={state.exportAll} testID="data-export-button"/>
         {onDatabase
             ? <SmallButton text="Use sessions.txt instead" onClick={state.useJson} testID="data-use-json-button"/>
             : <SmallButton text="Use the database" onClick={state.useInillucent} testID="data-use-inillucent-button"/>}
-    </Div>;
+    </View>;
 }
 
 /**
@@ -133,19 +132,19 @@ function Actions({status, state}: {status: StorageStatus, state: StorageStatusSt
  */
 function Backups({status, state}: {status: StorageStatus, state: StorageStatusState}){
     if(!status.backups.length){ return null; }
-    return <Div className={styles.card}>
+    return <View style={styles.card}>
         <Text style={styles.heading}>Backups</Text>
-        {status.backups.map(file => <Div key={file.path} className={styles.backup}>
+        {status.backups.map(file => <View key={file.path} style={styles.backup}>
             <Text style={styles.backupName}>{file.name}</Text>
             <Text style={styles.label}>{`${new Date(file.mtimeMs).toLocaleString()} · ${Math.ceil(file.size / 1024)} KB`}</Text>
-            <Div className={styles.backupActions}>
+            <View style={styles.backupActions}>
                 {file.name.endsWith('.json') ? <SmallButton text="Share" onClick={() => state.share(file.path, file.name)}/> : null}
                 {file.name.endsWith('.json') && status.report.mode === 'inillucent'
                     ? <SmallButton text="Re-import" onClick={() => state.reimport(file.path)} testID={`data-reimport-${file.name}`}/>
                     : null}
-            </Div>
-        </Div>)}
-    </Div>;
+            </View>
+        </View>)}
+    </View>;
 }
 
 export default DataModal;

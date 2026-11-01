@@ -32,6 +32,11 @@ beforeEach(async () => {
     (NativeModules as any).Inillucent = native;
 });
 
+afterAll(async () => {
+    await meditationSessionRepository['active']?.then(a => a.db?.close()).catch(() => undefined);
+    RNFS.__dispose();
+});
+
 /**
  * Writes a legacy sessions.txt.
  * @param sessions - the sessions, newest first

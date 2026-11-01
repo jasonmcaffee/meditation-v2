@@ -4,6 +4,8 @@ appId: com.jasonmcaffee.meditation
 # (scripts/device-test-android.mjs, or the iOS workflow), the converted sessions show on the Sessions
 # page and the Data screen says they are in the inillucent database.
 # launchApp WITHOUT clearState so the converted database survives.
+# Notes are matched as ".*note.*": on iOS a session card is one accessibility element whose label
+# holds the date, duration and rating as well as the note.
 
 - launchApp
 - waitForAnimationToEnd
@@ -17,9 +19,9 @@ appId: com.jasonmcaffee.meditation
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible:
-      text: "Calm. Breath settled after ten minutes. #40"
+      text: ".*Calm. Breath settled after ten minutes. #40.*"
     timeout: 10000
-- assertVisible: "Busy mind 🙂 kept returning to work emails #39"
+- assertVisible: ".*Busy mind 🙂 kept returning to work emails #39.*"
 - takeScreenshot: converted-sessions
 
 - tapOn:
