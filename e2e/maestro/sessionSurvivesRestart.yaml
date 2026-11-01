@@ -19,6 +19,10 @@ appId: com.jasonmcaffee.meditation
     timeout: 5000
 - tapOn:
     id: "notes-input"
+# A fresh iOS simulator shows a one time keyboard tip ("Speed up your typing...") over the keyboard.
+- tapOn:
+    text: "Continue"
+    optional: true
 - inputText: "Saved before a restart"
 - tapOn:
     id: "save-button"

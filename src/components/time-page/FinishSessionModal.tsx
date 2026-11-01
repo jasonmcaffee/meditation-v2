@@ -90,10 +90,10 @@ function FinishSessionModal({meditationSession, children, onCloseClick, onSaveCl
     const windowStyle = [styles.finishSessionModalWindow, keyboardHeight > 0 ? {marginBottom: keyboardHeight} : null];
 
     return <Modal onCloseClick={handleClose} className={styles.finishSessionModal} windowClassName={windowStyle}>
-        <Div className={styles.rowOne}>
+        <Div className={styles.rowOne} accessible={false}>
             <Text style={styles.durationText} testID="session-duration">{ getFormattedDuration(meditationSession.durationMs)}</Text>
         </Div>
-        <Div className={styles.rowTwo}>
+        <Div className={styles.rowTwo} accessible={false}>
             <Text style={styles.notesText}>Notes</Text>
             <TextInput
                 ref={notesInputRef}
@@ -115,7 +115,7 @@ function FinishSessionModal({meditationSession, children, onCloseClick, onSaveCl
             onRemoveClick={handleRemoveMedia}
             testIDPrefix="finish-media"
         />
-        <Div className={styles.rowThree}>
+        <Div className={styles.rowThree} accessible={false}>
             <StarRating
                 rating={rating}
                 onChange={setRating}
@@ -124,7 +124,7 @@ function FinishSessionModal({meditationSession, children, onCloseClick, onSaveCl
                 animationConfig={{scale: 1}}
             />
         </Div>
-        <Div className={styles.rowFour}>
+        <Div className={styles.rowFour} accessible={false}>
             <Pressable testID="save-button" onPress={handleSave} style={({pressed}) => [styles.saveButton, pressed && styles.saveButtonPressed]}>
                 <Text style={styles.saveButtonText}>Save</Text>
             </Pressable>
