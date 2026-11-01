@@ -20,7 +20,7 @@ name: ios
 on:
   workflow_dispatch:
   push:
-    branches: [master]
+    branches: [main]
     paths:
       - "modules/react-native-inillucent/**"
       - "src/services/storage/**"
