@@ -53,6 +53,39 @@ class FileSystem{
     async exists(path: string): Promise<boolean>{
         return RNFS.exists(path);
     }
+
+    /**
+     * The sha256 of a file's bytes, as hex.
+     * @param path - the file
+     */
+    async hash(path: string): Promise<string>{
+        return RNFS.hash(path, 'sha256');
+    }
+
+    /**
+     * Moves (renames) a file.
+     * @param sourcePath - the file
+     * @param destPath - its new path
+     */
+    async moveFile(sourcePath: string, destPath: string){
+        console.log(`moving file. ${sourcePath} -> ${destPath}`);
+        return RNFS.moveFile(sourcePath, destPath);
+    }
+
+    /**
+     * The files directly inside a folder, or none when the folder does not exist.
+     * @param path - the folder
+     */
+    async listFiles(path: string): Promise<{name: string, path: string, size: number, mtimeMs: number}[]>{
+        if(!(await RNFS.exists(path))){ return []; }
+        const entries = await RNFS.readDir(path);
+        return entries.filter((e: any) => e.isFile()).map((e: any) => ({
+            name: e.name,
+            path: e.path,
+            size: Number(e.size),
+            mtimeMs: e.mtime ? new Date(e.mtime).getTime() : 0,
+        }));
+    }
 }
 
 const fileSystem = new FileSystem();

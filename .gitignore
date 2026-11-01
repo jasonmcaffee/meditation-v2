@@ -73,3 +73,6 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Agent byproducts: device test reports, screenshots, logs
+_agent_output/

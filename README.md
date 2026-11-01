@@ -86,6 +86,15 @@ node_modules/react-native/third-party-podspecs/boost.podspec
  spec.source = { :http => 'https://archives.boost.io/release/1.76.0/source/boost_1_76_0.tar.bz2',
                   :sha256 => 'f0397ba6e982c4450f27bf32a2a83292aba035b827a5623a14636ea583318c41' }
 ```
+#### Build the inillucent library for iOS
+The sessions are stored in an inillucent database (see "Storage" below). The iOS app links the
+inillucent C library as `InillucentFFI.xcframework`, which is built from an inillucent checkout and
+is not checked in. Do this once, and again whenever `modules/react-native-inillucent/INILLUCENT_COMMIT`
+changes. It needs Rust (`rustup`) and an inillucent checkout at `../inillucent` (or set `INILLUCENT_DIR`).
+```shell
+sh scripts/build-inillucent-ios.sh
+```
+
 #### Install pods
 ```shell
 cd ios && pod install && cd ..
@@ -136,3 +145,51 @@ var resolveAssetSource = require("react-native/Libraries/Image/resolveAssetSourc
 ```
 
 The patch is in patches folder, and is applied post-install via scripts in package.json
+
+## Storage
+
+Sessions are stored in an inillucent database, `Documents/db/meditation.rdb` (task-2445; design in
+`tasks/inillucent-storage-tdd.md`). Every version before that kept them in one JSON file,
+`Documents/sessions.txt`.
+
+### What happens on the first launch of the inillucent version
+1. A copy of `sessions.txt` is written to `Documents/legacy-backup/sessions-<hash>.json` and checked by hash.
+2. Every session is inserted in one transaction, read back and compared with the file field for field.
+   Any difference rolls the whole thing back, and the app keeps using `sessions.txt` for that launch.
+3. Fields the columns do not hold are kept in `extra_json`, and records that are not sessions at all
+   are kept in the `legacy_quarantine` table with their original text. Nothing is dropped.
+4. After the commit, `sessions.txt` is removed from `Documents`; its checked copy stays in `legacy-backup`.
+
+A crash at any point is safe: the conversion runs again on the next launch and skips sessions
+already stored. `Documents/storage-report.json` says what the last launch did.
+
+### The Data screen
+The database button at the top of the Sessions page opens it. It shows where the sessions are, the
+conversion result and the backup files, and can retry the conversion, re-import a backup, share the
+original file, export every session as JSON, and switch to `sessions.txt` and back.
+
+### The bridge
+`modules/react-native-inillucent` is a local React Native module (autolinked through
+`react-native.config.js`): `InillucentModule.kt` over the inillucent Android library, and
+`InillucentModule.m` over the C library on iOS. The JavaScript side is
+`src/services/storage/inillucentDb.ts`.
+
+- Android: the library is checked in as a local Maven repository under
+  `modules/react-native-inillucent/android/libs/maven`. Update it with
+  `node scripts/update-inillucent-android.mjs` (needs the Android NDK and Rust, see inillucent's
+  `packages/android/README.md`).
+- iOS: `sh scripts/build-inillucent-ios.sh`, above.
+
+### Tests
+- `npm test`: `src/tests/storage/inillucentStorage.test.ts` runs the conversion, the repository and
+  the Data screen actions against the real engine (the `inillucent` npm package's C library, loaded
+  into Node).
+- Android: build a debug APK with the JavaScript bundled in, so no Metro is needed, then seed a
+  legacy file and check the conversion, then run the Maestro flows:
+  ```shell
+  android/gradlew -p android assembleDebug -I scripts/bundle-js-in-debug.gradle
+  adb install -r android/app/build/outputs/apk/debug/app-debug.apk
+  node scripts/device-test-android.mjs --serial emulator-5554
+  maestro test e2e/maestro/convertedSessions.yaml e2e/maestro/sessionSurvivesRestart.yaml
+  ```
+- iOS: `.github/workflows/ios.yml` does the same on a GitHub macOS runner with an iOS simulator.

@@ -1,0 +1,7 @@
+{
+  "name": "react-native-inillucent",
+  "version": "0.1.0",
+  "description": "A React Native bridge to the inillucent embedded database, for the Meditation app. The JavaScript side is src/services/storage/inillucentDb.ts in the app.",
+  "private": true,
+  "license": "UNLICENSED"
+}

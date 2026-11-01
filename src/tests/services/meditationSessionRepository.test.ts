@@ -1,4 +1,4 @@
-import { MeditationSessionRepository } from '../../repository/meditationSessionRepository';
+import { JsonSessionRepository as MeditationSessionRepository } from '../../repository/jsonSessionRepository';
 import IMeditationSession from '../../models/IMeditationSession';
 import mediaService from '../../services/mediaService';
 

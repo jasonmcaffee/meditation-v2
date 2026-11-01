@@ -1,0 +1,54 @@
+// The Android half of the bridge: InillucentModule.kt over the inillucent Kotlin library.
+//
+// The inillucent library is the release AAR from inillucent/packages/android, with its native
+// libraries stripped, checked in as a one artifact Maven repository under libs/maven. (A library
+// module cannot depend on a loose .aar file: the Android Gradle plugin refuses to bundle it.)
+// scripts/update-inillucent-android.mjs rebuilds it from an inillucent checkout, writes the version
+// to inillucent.properties and the commit it came from to ../INILLUCENT_COMMIT.
+
+buildscript {
+    ext.safeExtGet = { prop, fallback -> rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback }
+}
+
+def inillucentProperties = new Properties()
+file('inillucent.properties').withInputStream { inillucentProperties.load(it) }
+def inillucentRepository = file('libs/maven')
+
+// The app resolves this module's dependencies too, so every project gets the local repository.
+rootProject.allprojects {
+    repositories {
+        maven { url inillucentRepository }
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'org.jetbrains.kotlin.android'
+
+android {
+    namespace "com.jasonmcaffee.inillucent"
+    compileSdkVersion safeExtGet('compileSdkVersion', 35)
+
+    defaultConfig {
+        minSdkVersion safeExtGet('minSdkVersion', 24)
+        targetSdkVersion safeExtGet('targetSdkVersion', 35)
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.facebook.react:react-android'
+    implementation "com.blackrainbowlabs.inillucent:inillucent:${inillucentProperties.getProperty('version')}"
+}

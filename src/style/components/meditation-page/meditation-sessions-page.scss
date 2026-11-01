@@ -5,6 +5,29 @@
   @extend .page;
 }
 
+.header{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding-right: 16px;
+  padding-top: 8px;
+}
+
+.loading{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-top: 24px;
+}
+
+.loadingText{
+  @extend %font;
+  font-size: 14px;
+  color: $textSecondary;
+  margin-left: 10px;
+}
+
 .listContent{
   padding-left: 16px;
   padding-right: 16px;

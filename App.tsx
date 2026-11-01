@@ -8,6 +8,8 @@ import './src/services/audioNotifications';
 import "./src/services/appEventBus";
 import "./src/services/hapticFeedback";
 import appEventBus from "./src/services/appEventBus";
+import {useStorageStartupNotice} from "./src/hooks/useStorageStartupNotice";
+import {showDataModal} from "./src/components/meditation-sessions-page/MeditationSessionsPage";
 // import  './src/style/common.scss'; //fix? https://github.com/kristerkari/react-native-sass-transformer/issues/9
 import Sound from 'react-native-sound';
 console.log(Sound.MAIN_BUNDLE); // Should print 'NSBundle mainBundle'
@@ -19,6 +21,7 @@ const meditationSessionPage = <MeditationSessionsPage/>;
 const App = () => {
 
   const [modal, setModal] = useState<ReactNode>();
+  useStorageStartupNotice(showDataModal);
   useEffect(()=>{
     return appEventBus.app.showModal().on(modalToShow =>{
       setModal(modalToShow);

@@ -1,0 +1,46 @@
+appId: com.jasonmcaffee.meditation
+---
+# E2E test (task-2445): a session saved into the inillucent database is still there after the app is
+# stopped and started again, next to the sessions converted from sessions.txt.
+# Run after convertedSessions.yaml; launchApp WITHOUT clearState.
+
+- launchApp
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "finish-button"
+    timeout: 25000
+- tapOn:
+    id: "finish-button"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "notes-input"
+    timeout: 5000
+- tapOn:
+    id: "notes-input"
+- inputText: "Saved before a restart"
+- tapOn:
+    id: "save-button"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    notVisible:
+      id: "notes-input"
+    timeout: 5000
+
+- stopApp
+- launchApp
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "sessions-tab"
+    timeout: 25000
+- tapOn:
+    id: "sessions-tab"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      text: "Saved before a restart"
+    timeout: 10000
+- assertVisible: "Calm. Breath settled after ten minutes. #40"
+- takeScreenshot: saved-after-restart

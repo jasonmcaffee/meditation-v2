@@ -1,0 +1,108 @@
+# The iOS app on an iOS simulator (task-2445).
+#
+# Only a Mac builds and runs an iOS app, and the development machine is Windows, so this is where
+# the iOS half of the inillucent bridge is compiled and tested. It:
+#
+# 1. checks out inillucent at the commit in modules/react-native-inillucent/INILLUCENT_COMMIT, the
+#    commit the vendored Android library was built from, and builds InillucentFFI.xcframework for
+#    the iPhone and the simulator,
+# 2. installs the pods and builds the app for the simulator in Release, so the JavaScript is bundled,
+# 3. installs it fresh on the newest iPhone simulator with a 40 session legacy sessions.txt in
+#    Documents, launches it, and checks the conversion (scripts/device-test-ios.mjs),
+# 4. runs the Maestro flows that check the converted sessions on screen, the Data screen, and a
+#    new session surviving a restart.
+#
+# The device test results, the Maestro screenshots and the Podfile.lock pod install wrote are
+# uploaded as the ios-results artifact.
+
+name: ios
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "modules/react-native-inillucent/**"
+      - "src/services/storage/**"
+      - "src/repository/**"
+      - "ios/**"
+      - "scripts/build-inillucent-ios.sh"
+      - "scripts/device-test-ios.mjs"
+      - "e2e/**"
+      - ".github/workflows/ios.yml"
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: 0
+
+jobs:
+  simulator:
+    name: iOS simulator
+    runs-on: macos-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: inillucent at the pinned commit
+        id: inillucent
+        run: |
+          commit=$(tr -d '[:space:]' < modules/react-native-inillucent/INILLUCENT_COMMIT)
+          dir="$RUNNER_TEMP/inillucent"
+          git clone --filter=blob:none https://github.com/Black-Rainbow-Labs/Inillucent.git "$dir"
+          git -C "$dir" checkout --detach "$commit"
+          echo "dir=$dir" >> "$GITHUB_OUTPUT"
+          xcodebuild -version
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: ${{ steps.inillucent.outputs.dir }}
+          key: meditation-ios
+
+      - name: the XCFramework
+        env:
+          INILLUCENT_DIR: ${{ steps.inillucent.outputs.dir }}
+        run: sh scripts/build-inillucent-ios.sh
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: npm ci
+        run: npm ci
+
+      - name: pod install
+        run: pod install --project-directory=ios
+
+      - name: build the app for the simulator
+        run: |
+          set -o pipefail
+          xcodebuild -workspace ios/meditation.xcworkspace -scheme meditation -configuration Release \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/ios CODE_SIGNING_ALLOWED=NO build | tail -n 150
+
+      - name: the conversion on a simulator
+        run: node scripts/device-test-ios.mjs --app build/ios/Build/Products/Release-iphonesimulator/meditation.app
+
+      - name: the Maestro flows
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          export PATH="$PATH:$HOME/.maestro/bin"
+          export MAESTRO_CLI_NO_ANALYTICS=1
+          mkdir -p _agent_output/maestro
+          device=$(cat _agent_output/ios-device-udid.txt)
+          maestro --device "$device" test --test-output-dir _agent_output/maestro \
+            e2e/maestro/convertedSessions.yaml
+          maestro --device "$device" test --test-output-dir _agent_output/maestro \
+            e2e/maestro/sessionSurvivesRestart.yaml
+
+      - name: results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-results
+          path: |
+            _agent_output/
+            ios/Podfile.lock
+            *.png
+          if-no-files-found: warn

@@ -38,7 +38,7 @@ function MeditationSession({children, onDeleteClick, meditationSession}: Props){
                     PanResponder otherwise captures the touch and blocks swipe-to-delete. Rating is read-only here. */}
                 <View pointerEvents="none">
                     <StarRating
-                        rating={meditationSession.rating}
+                        rating={typeof meditationSession.rating === 'number' ? meditationSession.rating : 0}
                         starSize={18}
                         StarIconComponent={GradientStar}
                         onChange={() => null}

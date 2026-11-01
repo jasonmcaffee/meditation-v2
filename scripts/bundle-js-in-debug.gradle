@@ -1,0 +1,14 @@
+// A Gradle init script that makes the debug build carry its JavaScript bundle, as a release build
+// does, so a debuggable app runs without Metro. The device tests need debuggable (they write the
+// legacy sessions file with `adb run-as`) and need no Metro (a Maestro clearState wipes the setting
+// that points the app at a Metro on another port).
+//
+//   android/gradlew -p android assembleDebug -I scripts/bundle-js-in-debug.gradle
+//
+// It sets the React Native Gradle plugin's debuggableVariants to none, which is the setting
+// android/app/build.gradle documents for this, without editing that file.
+allprojects { project ->
+    project.plugins.withId('com.facebook.react') {
+        project.extensions.getByName('react').debuggableVariants.set([])
+    }
+}

@@ -1,0 +1,39 @@
+appId: com.jasonmcaffee.meditation
+---
+# E2E test (task-2445): after a 40 session legacy sessions.txt was seeded and converted
+# (scripts/device-test-android.mjs, or the iOS workflow), the converted sessions show on the Sessions
+# page and the Data screen says they are in the inillucent database.
+# launchApp WITHOUT clearState so the converted database survives.
+
+- launchApp
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "sessions-tab"
+    timeout: 25000
+
+- tapOn:
+    id: "sessions-tab"
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      text: "Calm. Breath settled after ten minutes. #40"
+    timeout: 10000
+- assertVisible: "Busy mind 🙂 kept returning to work emails #39"
+- takeScreenshot: converted-sessions
+
+- tapOn:
+    id: "data-button"
+- extendedWaitUntil:
+    visible:
+      id: "data-modal"
+    timeout: 8000
+- assertVisible:
+    id: "data-storage-mode"
+    text: "inillucent database"
+- assertVisible:
+    id: "data-session-count"
+    text: "40"
+- assertNotVisible:
+    id: "data-warning"
+- takeScreenshot: data-screen

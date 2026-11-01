@@ -1,0 +1,132 @@
+@import "./src/style/common";
+
+.window{
+  max-height: 85%;
+  padding-top: 20px;
+}
+
+.content{
+  padding-bottom: 12px;
+}
+
+.title{
+  @extend %font;
+  font-size: 22px;
+  font-weight: 600;
+  color: $textPrimary;
+  margin-bottom: 14px;
+}
+
+.heading{
+  @extend %font;
+  font-size: 16px;
+  font-weight: 600;
+  color: $textPrimary;
+  margin-bottom: 8px;
+}
+
+.card{
+  background-color: $glassCard;
+  border-width: 1px;
+  border-color: $glassBorder;
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.line{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.label{
+  @extend %font;
+  font-size: 13px;
+  color: $textSecondary;
+  flex-shrink: 1;
+  margin-right: 10px;
+}
+
+.value{
+  @extend %font;
+  font-size: 13px;
+  color: $textPrimary;
+  flex-shrink: 1;
+  text-align: right;
+}
+
+.warning{
+  background-color: rgba(214, 76, 140, 0.14);
+  border-width: 1px;
+  border-color: rgba(214, 76, 140, 0.45);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.warningText{
+  @extend %font;
+  font-size: 13px;
+  color: $textPrimary;
+  margin-bottom: 4px;
+}
+
+.busy{
+  margin-bottom: 10px;
+}
+
+.message{
+  @extend %font;
+  font-size: 13px;
+  color: $accentCyan;
+  margin-bottom: 10px;
+}
+
+.error{
+  @extend %font;
+  font-size: 13px;
+  color: $accentPink;
+  margin-bottom: 10px;
+}
+
+.actions{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.smallButton{
+  padding: 8px 14px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+.smallButtonText{
+  @extend %font;
+  font-size: 13px;
+  font-weight: 600;
+  color: $textPrimary;
+}
+
+.backup{
+  border-top-width: 1px;
+  border-top-color: $glassBorder;
+  padding-top: 8px;
+  padding-bottom: 4px;
+}
+
+.backupName{
+  @extend %font;
+  font-size: 13px;
+  color: $textPrimary;
+}
+
+.backupActions{
+  display: flex;
+  flex-direction: row;
+  margin-top: 6px;
+}
